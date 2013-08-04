@@ -21,3 +21,6 @@ class EquiposManager
 		return $result;
 	}
 
+}
+
+?>
