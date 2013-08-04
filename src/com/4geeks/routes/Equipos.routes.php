@@ -2,10 +2,22 @@
 
 	require_once 'src/com/4geeks/model/Equipos.manager.php';
 
-	$app->get('/equipos/por_perfil/:id', $authenticate($app), function($id) use ($app){
+	$app->get('/equipos/por_golfista/:id', $authenticate($app), function($id) use ($app){
 
-		$equiposManager = new EquiposManager();
-		$result = $equiposManager->getEquipos($id);
+		try {
+			$equiposManager = new EquiposManager();
+			$result = $equiposManager->getEquipos($id);
+			
+		} catch (Exception $e) {
+			$result = array(
+					    "success"  => false, 
+					    "response" => array(
+					    	"message" => "No se encontraron equipos para este Socio."
+					    	)
+					);
+
+			$app->render(204,$result);
+		}
 
 		$app->render(200,$result);
 
