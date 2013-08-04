@@ -1,6 +1,8 @@
 <?php
 
-class EquiposManager
+require_once "src/com/4geeks/model/Base.manager.php";
+
+class EquiposManager extends BaseManager
 {
 
     public  function crearEquipo($data)

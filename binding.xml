@@ -1,4 +1,0 @@
-<?xml version="1.0"?>
-<routes>
-	<route uri="/" method="get" delegate="Home" action="firstRender"  />
-</routes>
