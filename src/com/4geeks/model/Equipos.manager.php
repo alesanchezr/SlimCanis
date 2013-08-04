@@ -21,6 +21,19 @@ class EquiposManager
 		return $result;
 	}
 
+	public function getEquipos($id)
+	{
+		$qb = $entityManager->createQueryBuilder();
+		$qb->select('e.*')
+		   ->from('Equipo', 'e')
+		   ->where('e.socio = ?1')
+		   ->setParameter(1, $id);
+		$array = $query->getArrayResult();
+
+		//print_r($array);
+		return $array;
+	}
+
 }
 
 ?>
