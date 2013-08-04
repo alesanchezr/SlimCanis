@@ -1,4 +1,5 @@
 <?php
+
 // src/Product.php
 /**
  * @Entity @Table(name="user")
@@ -10,6 +11,9 @@ class User
 
     /** @Column(type="string") **/
     protected $email;
+
+    /** @Column(length=25) **/
+    protected $password;
 
     public function getId()
     {
@@ -24,5 +28,15 @@ class User
     public function setEmail($email)
     {
         $this->email = $email;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = $password;
     }
 }
