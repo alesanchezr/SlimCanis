@@ -1,7 +1,9 @@
 <?php
 
-	// POST route
-	$app->get('/equipos', $authenticate($app), function() use ($app){
+	require_once 'src/com/4geeks/model/Equipos.manager.php';
+
+		// POST route
+	$app->post('/equipos', $authenticate($app), function() use ($app){
 
 		$data = json_decode($app->request()->getBody());
 

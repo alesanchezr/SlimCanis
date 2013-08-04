@@ -26,8 +26,7 @@ $rootUri = $app->request()->getResourceUri();
 $url = explode('/', trim($rootUri, '/'));
 $first_segment = "";
 if(count($url)>=0) $first_segment = $url[0];
-
-require_once "src/com/4geeks/routes/".ucfirst($first_segment).'.routes.php';
+if($first_segment and $first_segment!='') require_once "src/com/4geeks/routes/".ucfirst($first_segment).'.routes.php';
 
 
 /**
