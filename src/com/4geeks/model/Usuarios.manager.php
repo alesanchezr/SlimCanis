@@ -5,6 +5,7 @@ require_once "src/com/4geeks/model/Base.manager.php";
 class UsuariosManager extends BaseManager
 {
 
+
     public  function crearUsuario($data)
 	{
 
