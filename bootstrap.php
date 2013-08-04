@@ -17,7 +17,7 @@ require_once "vendor/autoload.php";
 $isDevMode = true;
 $config = Setup::createAnnotationMetadataConfiguration(array($model_dir), $isDevMode);
 
-$classLoader = new \Doctrine\Common\ClassLoader('src/model', $model_dir);
+$classLoader = new ClassLoader('src/model', $model_dir);
 $classLoader->register();
 
 // database configuration parameters

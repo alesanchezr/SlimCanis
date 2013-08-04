@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "f04c1cd07a8acfb176d7cfd799e9eaf8",
+    "hash": "fc63a01a4e8d46488f96210184629331",
     "packages": [
         {
             "name": "doctrine/common",
@@ -208,20 +208,67 @@
             "time": "2013-05-11 07:51:12"
         },
         {
-            "name": "slim/slim",
-            "version": "2.2.0",
+            "name": "entomb/slim-json-api",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/codeguy/Slim",
-                "reference": "2.2.0"
+                "url": "https://github.com/entomb/slim-json-api.git",
+                "reference": "6a93d4d5f0e9ea8cb7eca9c75289eb0479e8970b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/codeguy/Slim/archive/2.2.0.zip",
-                "reference": "2.2.0",
+                "url": "https://api.github.com/repos/entomb/slim-json-api/zipball/6a93d4d5f0e9ea8cb7eca9c75289eb0479e8970b",
+                "reference": "6a93d4d5f0e9ea8cb7eca9c75289eb0479e8970b",
                 "shasum": ""
             },
             "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "jsonAPI/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL 3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Tavares",
+                    "email": "the.entomb@gmail.com",
+                    "homepage": "https://github.com/entomb",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Slim extension to implement fast JSON API's",
+            "homepage": "https://github.com/entomb/slim-json-api",
+            "keywords": [
+                "api",
+                "json",
+                "middleware",
+                "slim",
+                "view"
+            ],
+            "time": "2013-07-20 11:52:08"
+        },
+        {
+            "name": "slim/slim",
+            "version": "2.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codeguy/Slim.git",
+                "reference": "2.3.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codeguy/Slim/zipball/2.3.1",
+                "reference": "2.3.1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mcrypt": "*",
                 "php": ">=5.3.0"
             },
             "type": "library",
@@ -248,7 +295,7 @@
                 "rest",
                 "router"
             ],
-            "time": "2012-12-13 02:15:50"
+            "time": "2013-07-20 18:38:05"
         },
         {
             "name": "symfony/console",
@@ -311,9 +358,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "entomb/slim-json-api": 20
+    },
     "platform": [
 
     ],

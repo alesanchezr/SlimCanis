@@ -1,6 +1,7 @@
 {
     "require": {
         "doctrine/orm": "*",
-        "slim/slim": "2.*"
+        "slim/slim": "2.3.*",
+        "entomb/slim-json-api": "dev-master"
     }
 }
