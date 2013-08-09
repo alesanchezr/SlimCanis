@@ -3,6 +3,7 @@
  * @Entity @Table(name="golfistas")
  **/
 require_once "src/com/4geeks/entities/Users.php";
+require_once "src/com/4geeks/entities/Equipos.php";
 
 class Golfistas
 {
@@ -31,6 +32,13 @@ class Golfistas
     * @JoinColumn(name="socio", referencedColumnName="id")
     **/
     protected $socio;
+
+    /**
+    * @ManyToMany(targetEntity="Equipos", inversedBy="golfista_id")
+    * @JoinTable(name="equipo_usuarios")
+    **/
+    protected $equipo_id;
+
 
     public function getId()
     {
@@ -75,6 +83,10 @@ class Golfistas
     public function setSocio($socio)
     {
         $this->socio = $socio;
+    }
+
+    public function __construct() {
+        $this->equipo_id = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 }

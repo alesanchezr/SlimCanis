@@ -14,19 +14,15 @@ class Equipos
     protected $handicap_promedio;
 
     /** 
-    * @OneToOne(targetEntity="Golfistas", inversedBy="id")
+    * @OneToOne(targetEntity="Golfistas")
     * @JoinColumn(name="golfista_id", referencedColumnName="id")
     **/
     protected $golfista_id;
 
     /**
-     * @ManyToMany(targetEntity="Golfistas")
-     * @JoinTable(name="equipo_usuarios",
-     *      joinColumns={@JoinColumn(name="equipo_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="golfista_id", referencedColumnName="id")}
-     *      )
+     * @ManyToMany(targetEntity="Golfistas", mappedBy="equipo_id")
      **/
-    private $integrantes;
+    private $golfistas_id;
 
     public function getId()
     {
@@ -54,6 +50,6 @@ class Equipos
     }
 
     public function __construct() {
-        $this->integrantes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->golfistas_id = new \Doctrine\Common\Collections\ArrayCollection();
     }
 }

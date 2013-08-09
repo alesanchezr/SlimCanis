@@ -7,19 +7,20 @@
 		try {
 			$equiposManager = new EquiposManager();
 			$result = $equiposManager->getEquipos($id);
-			
+			$app->render(200,$result);
+
 		} catch (Exception $e) {
 			$result = array(
 					    "success"  => false, 
 					    "response" => array(
-					    	"message" => "No se encontraron equipos para este Socio."
+					    	"message" => $e->getMessage()
 					    	)
 					);
 
-			$app->render(204,$result);
+			$app->render(201,$result);
 		}
 
-		$app->render(200,$result);
+		//$app->render(200,$result);
 
 	});
 		// POST route
