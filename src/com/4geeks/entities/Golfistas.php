@@ -35,7 +35,7 @@ class Golfistas
 
     /**
     * @ManyToMany(targetEntity="Equipos", inversedBy="golfista_id")
-    * @JoinTable(name="equipo_usuarios")
+    * @JoinTable(name="equipos_usuarios")
     **/
     protected $equipo_id;
 

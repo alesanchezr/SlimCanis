@@ -84,36 +84,27 @@ class EquiposManager extends BaseManager
 	{
 		
 		require_once "src/com/4geeks/entities/Equipos.php";
-		/*$qb = self::$EntityManager->createQueryBuilder();
-		$qb->select('e')
-		   ->from('equipos', 'e')
-		   ->where('e.golfista_id = ?1')
-		   ->setParameter(1, $id);*/
-		//$query = self::$EntityManager->createQuery('SELECT e, g, g2 FROM Equipos e LEFT JOIN e.golfista_id g LEFT JOIN e.golfistas_id g2 WHERE e.golfista_id = ?1');
-		//$query = self::$EntityManager->createQuery('SELECT evu, equ, gol FROM equipos_usuarios evu JOIN equipos equ ON equ.id = evu.equipo_id JOIN golfistas gol ON gol.id = evu.golfistas_id WHERE equ.id = 1');
 		$query = self::$EntityManager->createQueryBuilder();
 		$query->addSelect('e');
 		$query->addSelect('g');
+		$query->addSelect('gs');
 
 		$query->from('equipos', 'e');
 
 		$query->leftJoin('e.golfista_id', 'g');
+		$query->leftJoin('e.golfistas_id','gs');
 		$query->where('e.golfista_id = ?1');		
 		
 		$query->setParameter(1, $id);
 
-		//print_r($query);
-		$array = $query->getQuery()->getResult(2);//->getQuery()->getArrayResult();
-		//self::$EntityManager->detach($array);
-
-		//print_r($array);
-		//if (count($array)>0) {
-		return $array;
-		/*}else{
-
-			throw new Exception("No found.", 1);
-			
-		}*/
+		$array = $query->getQuery()->getResult(2);//2 - Para el Hydration (vuelve la respuesta un array convertible a json)
+		
+		if (count($array)>0) {
+			return $array;
+		}else{
+			throw new Exception("Not found.", 1);	
+		}
+		
 		
 	}
 

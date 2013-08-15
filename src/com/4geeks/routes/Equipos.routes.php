@@ -7,7 +7,13 @@
 		try {
 			$equiposManager = new EquiposManager();
 			$result = $equiposManager->getEquipos($id);
-			$app->render(200,$result);
+			$response = array(
+							"success" => true,
+							"response" => $result
+							);
+			$app->render(200,$response);
+
+			break;
 
 		} catch (Exception $e) {
 			$result = array(
@@ -16,8 +22,8 @@
 					    	"message" => $e->getMessage()
 					    	)
 					);
-
-			$app->render(201,$result);
+			print_r( $e->getMessage());
+			//$app->render(204,$result);
 		}
 
 		//$app->render(200,$result);
