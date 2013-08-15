@@ -1,6 +1,7 @@
 {
     "require": {
         "doctrine/orm": "*",
+        "symfony/yaml": "2.4.*@dev",
         "slim/slim": "2.3.*",
         "entomb/slim-json-api": "dev-master"
     }

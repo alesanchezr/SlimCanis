@@ -39,10 +39,10 @@ class EquiposManager extends BaseManager
 		        ] 
 		}
 		*/
-		require_once "src/com/4geeks/entities/Golfistas.php";
-		$socio = self::$EntityManager->find("Golfistas",$data->golfista_id);
+		require_once "src/com/4geeks/entities/Entity/Socio.php";
+		$socio = self::$EntityManager->find("Socio",$data->golfista_id);
 
-		require_once "src/com/4geeks/entities/Equipos.php";
+		require_once "src/com/4geeks/entities/Entity/Equipo.php";
 
 		$handicap = $socio->getHandicap();
 
@@ -83,7 +83,7 @@ class EquiposManager extends BaseManager
 	public function getEquipos($id)
 	{
 		
-		require_once "src/com/4geeks/entities/Equipos.php";
+		require_once "src/com/4geeks/entities/Entity/Equipo.php";
 		/*$qb = self::$EntityManager->createQueryBuilder();
 		$qb->select('e')
 		   ->from('equipos', 'e')
@@ -95,9 +95,9 @@ class EquiposManager extends BaseManager
 		$query->addSelect('e');
 		$query->addSelect('g');
 
-		$query->from('equipos', 'e');
-		$query->leftJoin('e.golfista_id', 'g');
-		$query->where('e.golfista_id = ?1');		
+		$query->from('Equipo', 'e');
+		$query->leftJoin('e.socio_id', 'g');
+		$query->where('e.socio_id = ?1');		
 		$query->setParameter(1, $id);
 
 		//print_r($query);

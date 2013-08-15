@@ -3,7 +3,7 @@
 	require_once 'src/com/4geeks/model/Equipos.manager.php';
 
 	//$app->get('/equipos/por_golfista/:id', $authenticate($app), function($id) use ($app){
-	$app->get('/equipos/por_golfista/:id', function($id) use ($app){
+	$app->get('/equipos/por_socio/:id', function($id) use ($app){
 
 		try {
 			$equiposManager = new EquiposManager();
