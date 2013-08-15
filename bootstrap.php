@@ -9,7 +9,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\Common\ClassLoader;
 
 $doctrine_dir = "vendor/doctrine/common/lib/Doctrine/";
-$model_dir = __DIR__."/src/model";
+$model_dir = __DIR__."/src/com/4geeks/entities/Entity/";
 
 require_once "vendor/autoload.php";
 
@@ -17,7 +17,7 @@ require_once "vendor/autoload.php";
 $isDevMode = true;
 $config = Setup::createAnnotationMetadataConfiguration(array($model_dir), $isDevMode);
 
-$classLoader = new ClassLoader('src/model', $model_dir);
+$classLoader = new ClassLoader('src/com/4geeks/entities/Entity', $model_dir);
 $classLoader->register();
 
 // database configuration parameters
