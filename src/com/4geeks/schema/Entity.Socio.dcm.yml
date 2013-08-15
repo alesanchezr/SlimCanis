@@ -1,13 +1,13 @@
-Entity\Golfistum:
+Entity\Socio:
     type: entity
-    table: golfista
-    repositoryClass: GolfistumRepository
+    table: socio
+    repositoryClass: SocioRepository
     indexes:
         cedula_UNIQUE:
             columns: [cedula]
         numero_socio_UNIQUE:
             columns: [numero_socio]
-        fk_golfista_user_idx:
+        fk_socio_user_idx:
             columns: [user_id]
     id:
         id:
@@ -40,35 +40,35 @@ Entity\Golfistum:
     oneToMany:
         asignacions:
             targetEntity: Asignacion
-            mappedBy: golfistum
+            mappedBy: socio
             joinColumn:
-                name: golfista_id
+                name: socio_id
                 referencedColumnName: id
                 nullable: false
         equipos:
             targetEntity: Equipo
-            mappedBy: golfistum
+            mappedBy: socio
             joinColumn:
-                name: golfista_id
+                name: socio_id
                 referencedColumnName: id
                 nullable: false
         integrantes:
             targetEntity: Integrante
-            mappedBy: golfistum
+            mappedBy: socio
             joinColumn:
-                name: golfista_id
+                name: socio_id
                 referencedColumnName: id
         reservacions:
             targetEntity: Reservacion
-            mappedBy: golfistum
+            mappedBy: socio
             joinColumn:
-                name: golfista_id
+                name: socio_id
                 referencedColumnName: id
                 nullable: false
     manyToOne:
         user:
             targetEntity: User
-            inversedBy: golfista
+            inversedBy: socios
             joinColumn:
                 name: user_id
                 referencedColumnName: id

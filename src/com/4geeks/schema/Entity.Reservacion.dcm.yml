@@ -3,8 +3,8 @@ Entity\Reservacion:
     table: reservacion
     repositoryClass: ReservacionRepository
     indexes:
-        fk_reservacion_golfista_idx:
-            columns: [golfista_id]
+        fk_reservacion_socio_idx:
+            columns: [socio_id]
         fk_reservacion_equipo_idx:
             columns: [equipo_id]
         index_estatus:
@@ -17,7 +17,7 @@ Entity\Reservacion:
             generator:
                 strategy: AUTO
     fields:
-        golfista_id:
+        socio_id:
             type: integer
         equipo_id:
             type: integer
@@ -42,11 +42,11 @@ Entity\Reservacion:
                 referencedColumnName: id
                 nullable: false
     manyToOne:
-        golfista:
-            targetEntity: Golfistum
+        socio:
+            targetEntity: Socio
             inversedBy: reservacions
             joinColumn:
-                name: golfista_id
+                name: socio_id
                 referencedColumnName: id
                 nullable: false
         equipo:

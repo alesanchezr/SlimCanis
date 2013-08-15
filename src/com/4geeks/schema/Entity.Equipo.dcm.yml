@@ -3,15 +3,15 @@ Entity\Equipo:
     table: equipo
     repositoryClass: EquipoRepository
     indexes:
-        fk_equipo_golfista_idx:
-            columns: [golfista_id]
+        fk_equipo_socio_idx:
+            columns: [socio_id]
     id:
         id:
             type: integer
             generator:
                 strategy: AUTO
     fields:
-        golfista_id:
+        socio_id:
             type: integer
         handicap_promedio:
             type: smallint
@@ -42,10 +42,10 @@ Entity\Equipo:
                 referencedColumnName: id
                 nullable: false
     manyToOne:
-        golfista:
-            targetEntity: Golfistum
+        socio:
+            targetEntity: Socio
             inversedBy: equipos
             joinColumn:
-                name: golfista_id
+                name: socio_id
                 referencedColumnName: id
                 nullable: false

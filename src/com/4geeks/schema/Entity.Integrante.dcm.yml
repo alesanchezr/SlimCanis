@@ -5,14 +5,14 @@ Entity\Integrante:
     indexes:
         fk_integrantes_equipo_idx:
             columns: [equipo_id]
-        fk_integrantes_golfista_idx:
-            columns: [golfista_id]
+        fk_integrantes_socio_idx:
+            columns: [socio_id]
         fk_integrantes_invitado_idx:
             columns: [invitado_id]
     fields:
         equipo_id:
             type: integer
-        golfista_id:
+        socio_id:
             type: integer
             nullable: true
         invitado_id:
@@ -26,11 +26,11 @@ Entity\Integrante:
                 name: equipo_id
                 referencedColumnName: id
                 nullable: false
-        golfista:
-            targetEntity: Golfistum
+        socio:
+            targetEntity: Socio
             inversedBy: integrantes
             joinColumn:
-                name: golfista_id
+                name: socio_id
                 referencedColumnName: id
         invitado:
             targetEntity: Invitado

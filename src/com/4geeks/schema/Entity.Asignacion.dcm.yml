@@ -9,8 +9,8 @@ Entity\Asignacion:
             columns: [cadi_id]
         fk_asignacion_equipo_idx:
             columns: [equipo_id]
-        fk_asignacion_golfista_idx:
-            columns: [golfista_id]
+        fk_asignacion_socio_idx:
+            columns: [socio_id]
         index_fecha_asignada:
             columns: [fecha_asignada]
         index_estatus:
@@ -26,7 +26,7 @@ Entity\Asignacion:
             unique: true
         equipo_id:
             type: integer
-        golfista_id:
+        socio_id:
             type: integer
         cadi_id:
             type: integer
@@ -65,11 +65,11 @@ Entity\Asignacion:
                 name: equipo_id
                 referencedColumnName: id
                 nullable: false
-        golfista:
-            targetEntity: Golfistum
+        socio:
+            targetEntity: Socio
             inversedBy: asignacions
             joinColumn:
-                name: golfista_id
+                name: socio_id
                 referencedColumnName: id
                 nullable: false
         cadi:
