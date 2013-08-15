@@ -9,7 +9,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\Common\ClassLoader;
 
 $doctrine_dir = "vendor/doctrine/common/lib/Doctrine/";
-$model_dir = __DIR__."/src/model";
+$model_dir = __DIR__."/src/com/4geeks/entities";
 
 require_once "vendor/autoload.php";
 

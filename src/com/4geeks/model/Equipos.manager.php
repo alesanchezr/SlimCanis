@@ -96,19 +96,17 @@ class EquiposManager extends BaseManager
 		$query->addSelect('g');
 
 		$query->from('equipos', 'e');
-
 		$query->leftJoin('e.golfista_id', 'g');
 		$query->where('e.golfista_id = ?1');		
-		
 		$query->setParameter(1, $id);
 
 		//print_r($query);
 		$array = $query->getQuery()->getResult(2);//->getQuery()->getArrayResult();
 		//self::$EntityManager->detach($array);
 
-		//print_r($array);
+		print_r($array);
 		//if (count($array)>0) {
-		return $array;
+		//return $array;
 		/*}else{
 
 			throw new Exception("No found.", 1);
