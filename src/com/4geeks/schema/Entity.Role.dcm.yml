@@ -1,0 +1,17 @@
+Entity\Role:
+    type: entity
+    table: role
+    repositoryClass: RoleRepository
+    indexes:
+        name_UNIQUE:
+            columns: [name]
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            length: 45
+            unique: true

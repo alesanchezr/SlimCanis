@@ -1,0 +1,24 @@
+Entity\FechaOcupada:
+    type: entity
+    table: fecha_ocupada
+    repositoryClass: FechaOcupadaRepository
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        fecha_inicio:
+
+        fecha_fin:
+
+        motivo:
+            type: string
+            length: 255
+        editado_por:
+            type: string
+            length: 45
+            nullable: true
+        createdate:
+
+        updatedate:

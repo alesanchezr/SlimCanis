@@ -1,0 +1,75 @@
+Entity\Golfistum:
+    type: entity
+    table: golfista
+    repositoryClass: GolfistumRepository
+    indexes:
+        cedula_UNIQUE:
+            columns: [cedula]
+        numero_socio_UNIQUE:
+            columns: [numero_socio]
+        fk_golfista_user_idx:
+            columns: [user_id]
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        user_id:
+            type: integer
+        nombre:
+            type: string
+            length: 50
+        cedula:
+            type: integer
+            unique: true
+        numero_socio:
+            type: string
+            length: 20
+            unique: true
+        handicap:
+            type: smallint
+        telefono:
+            type: string
+            length: 45
+            nullable: true
+        createdate:
+
+        updatedate:
+
+    oneToMany:
+        asignacions:
+            targetEntity: Asignacion
+            mappedBy: golfistum
+            joinColumn:
+                name: golfista_id
+                referencedColumnName: id
+                nullable: false
+        equipos:
+            targetEntity: Equipo
+            mappedBy: golfistum
+            joinColumn:
+                name: golfista_id
+                referencedColumnName: id
+                nullable: false
+        integrantes:
+            targetEntity: Integrante
+            mappedBy: golfistum
+            joinColumn:
+                name: golfista_id
+                referencedColumnName: id
+        reservacions:
+            targetEntity: Reservacion
+            mappedBy: golfistum
+            joinColumn:
+                name: golfista_id
+                referencedColumnName: id
+                nullable: false
+    manyToOne:
+        user:
+            targetEntity: User
+            inversedBy: golfista
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+                nullable: false

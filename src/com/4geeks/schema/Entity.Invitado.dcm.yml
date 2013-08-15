@@ -1,0 +1,56 @@
+Entity\Invitado:
+    type: entity
+    table: invitado
+    repositoryClass: InvitadoRepository
+    indexes:
+        email_UNIQUE:
+            columns: [email]
+        cedula_UNIQUE:
+            columns: [cedula]
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        nombre:
+            type: string
+            length: 50
+        cedula:
+            type: integer
+            unique: true
+        email:
+            type: string
+            length: 100
+            unique: true
+        telefono:
+            type: string
+            length: 20
+            nullable: true
+        handicap:
+            type: smallint
+        createdate:
+
+        updatedate:
+
+    oneToMany:
+        integrantes:
+            targetEntity: Integrante
+            mappedBy: invitado
+            joinColumn:
+                name: invitado_id
+                referencedColumnName: id
+    manyToMany:
+        asignacions:
+            targetEntity: Asignacion
+            inversedBy: invitados
+            joinTable:
+                name: invitacion
+                joinColumns:
+                    joinColumn:
+                        name: invitado_id
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    joinColumn:
+                        name: asignacion_id
+                        referencedColumnName: id

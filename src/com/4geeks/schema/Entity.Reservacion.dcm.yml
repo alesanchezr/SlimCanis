@@ -1,0 +1,58 @@
+Entity\Reservacion:
+    type: entity
+    table: reservacion
+    repositoryClass: ReservacionRepository
+    indexes:
+        fk_reservacion_golfista_idx:
+            columns: [golfista_id]
+        fk_reservacion_equipo_idx:
+            columns: [equipo_id]
+        index_estatus:
+            columns: [estatus]
+        index_fecha_solicitada:
+            columns: [fecha_solicitada]
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        golfista_id:
+            type: integer
+        equipo_id:
+            type: integer
+        fecha_solicitada:
+
+        estatus:
+            type: string
+            length: 25
+        editado_por:
+            type: string
+            length: 45
+            nullable: true
+        createdate:
+
+        updatedate:
+
+    oneToOne:
+        asignacion:
+            targetEntity: Asignacion
+            joinColumn:
+                name: reservacion_id
+                referencedColumnName: id
+                nullable: false
+    manyToOne:
+        golfista:
+            targetEntity: Golfistum
+            inversedBy: reservacions
+            joinColumn:
+                name: golfista_id
+                referencedColumnName: id
+                nullable: false
+        equipo:
+            targetEntity: Equipo
+            inversedBy: reservacions
+            joinColumn:
+                name: equipo_id
+                referencedColumnName: id
+                nullable: false
