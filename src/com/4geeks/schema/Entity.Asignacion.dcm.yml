@@ -1,0 +1,84 @@
+Entity\Asignacion:
+    type: entity
+    table: asignacion
+    repositoryClass: AsignacionRepository
+    indexes:
+        reservacion_id_UNIQUE:
+            columns: [reservacion_id]
+        fk_asignacion_cadi_idx:
+            columns: [cadi_id]
+        fk_asignacion_equipo_idx:
+            columns: [equipo_id]
+        fk_asignacion_socio_idx:
+            columns: [socio_id]
+        index_fecha_asignada:
+            columns: [fecha_asignada]
+        index_estatus:
+            columns: [estatus]
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        reservacion_id:
+            type: integer
+            unique: true
+        equipo_id:
+            type: integer
+        socio_id:
+            type: integer
+        cadi_id:
+            type: integer
+            nullable: true
+        hoyo:
+            type: integer
+        fecha_asignada:
+
+        fecha_inicio:
+            nullable: true
+        fecha_fin:
+            nullable: true
+        estatus:
+            type: string
+            length: 20
+        editado_por:
+            type: string
+            length: 45
+            nullable: true
+        createdate:
+            nullable: true
+        updatedate:
+            nullable: true
+    oneToOne:
+        reservacion:
+            targetEntity: Reservacion
+            joinColumn:
+                name: reservacion_id
+                referencedColumnName: id
+                nullable: false
+    manyToOne:
+        equipo:
+            targetEntity: Equipo
+            inversedBy: asignacions
+            joinColumn:
+                name: equipo_id
+                referencedColumnName: id
+                nullable: false
+        socio:
+            targetEntity: Socio
+            inversedBy: asignacions
+            joinColumn:
+                name: socio_id
+                referencedColumnName: id
+                nullable: false
+        cadi:
+            targetEntity: Cadi
+            inversedBy: asignacions
+            joinColumn:
+                name: cadi_id
+                referencedColumnName: id
+    manyToMany:
+        invitados:
+            targetEntity: Invitado
+            mappedBy: asignacions

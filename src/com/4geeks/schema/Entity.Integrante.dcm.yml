@@ -1,0 +1,40 @@
+Entity\Integrante:
+    type: entity
+    table: integrante
+    repositoryClass: IntegranteRepository
+    indexes:
+        fk_integrantes_equipo_idx:
+            columns: [equipo_id]
+        fk_integrantes_socio_idx:
+            columns: [socio_id]
+        fk_integrantes_invitado_idx:
+            columns: [invitado_id]
+    fields:
+        equipo_id:
+            type: integer
+        socio_id:
+            type: integer
+            nullable: true
+        invitado_id:
+            type: integer
+            nullable: true
+    manyToOne:
+        equipo:
+            targetEntity: Equipo
+            inversedBy: integrantes
+            joinColumn:
+                name: equipo_id
+                referencedColumnName: id
+                nullable: false
+        socio:
+            targetEntity: Socio
+            inversedBy: integrantes
+            joinColumn:
+                name: socio_id
+                referencedColumnName: id
+        invitado:
+            targetEntity: Invitado
+            inversedBy: integrantes
+            joinColumn:
+                name: invitado_id
+                referencedColumnName: id

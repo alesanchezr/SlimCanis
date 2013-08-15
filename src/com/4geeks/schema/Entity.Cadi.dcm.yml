@@ -1,0 +1,34 @@
+Entity\Cadi:
+    type: entity
+    table: cadi
+    repositoryClass: CadiRepository
+    indexes:
+        cedula_UNIQUE:
+            columns: [cedula]
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        nombre:
+            type: string
+            length: 50
+        cedula:
+            type: integer
+            unique: true
+        telefono:
+            type: string
+            length: 20
+            nullable: true
+        createdate:
+
+        updatedate:
+
+    oneToMany:
+        asignacions:
+            targetEntity: Asignacion
+            mappedBy: cadi
+            joinColumn:
+                name: cadi_id
+                referencedColumnName: id

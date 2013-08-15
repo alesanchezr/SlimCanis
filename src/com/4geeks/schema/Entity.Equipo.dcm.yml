@@ -1,0 +1,51 @@
+Entity\Equipo:
+    type: entity
+    table: equipo
+    repositoryClass: EquipoRepository
+    indexes:
+        fk_equipo_socio_idx:
+            columns: [socio_id]
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        socio_id:
+            type: integer
+        handicap_promedio:
+            type: smallint
+        createdate:
+
+        updatedate:
+
+    oneToMany:
+        asignacions:
+            targetEntity: Asignacion
+            mappedBy: equipo
+            joinColumn:
+                name: equipo_id
+                referencedColumnName: id
+                nullable: false
+        integrantes:
+            targetEntity: Integrante
+            mappedBy: equipo
+            joinColumn:
+                name: equipo_id
+                referencedColumnName: id
+                nullable: false
+        reservacions:
+            targetEntity: Reservacion
+            mappedBy: equipo
+            joinColumn:
+                name: equipo_id
+                referencedColumnName: id
+                nullable: false
+    manyToOne:
+        socio:
+            targetEntity: Socio
+            inversedBy: equipos
+            joinColumn:
+                name: socio_id
+                referencedColumnName: id
+                nullable: false
