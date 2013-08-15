@@ -7,6 +7,8 @@ Entity\User:
             columns: [username]
         email_UNIQUE:
             columns: [email]
+        fk_user_1_idx:
+            columns: [role_id]
     id:
         id:
             type: integer
@@ -21,7 +23,7 @@ Entity\User:
             type: string
             length: 100
         role_id:
-            type: smallint
+            type: integer
         email:
             type: string
             length: 100
@@ -36,5 +38,13 @@ Entity\User:
             mappedBy: user
             joinColumn:
                 name: user_id
+                referencedColumnName: id
+                nullable: false
+    manyToOne:
+        role:
+            targetEntity: Role
+            inversedBy: users
+            joinColumn:
+                name: role_id
                 referencedColumnName: id
                 nullable: false
