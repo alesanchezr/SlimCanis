@@ -19,26 +19,30 @@
 
 		$data = json_decode($app->request()->getBody());
 
-		$usuariosManager = new UsuariosManager();
-		$user = $usuariosManager->crearUsuario($data);
+		try
+		{
+			
+			$usuariosManager = new UsuariosManager();
+			$user = $usuariosManager->crearUsuario($data);
 
-		$role = $user->getRole();
-		$result = array(
-				    "success"  => true, 
-				    "response" => array( 
-				        "usuario"   => array(
-					        "username" => $user->getUsername(), 
-					        "password" => $user->getPassword(),
-					        "email" => $user->getEmail(),
-					        "role" => array(
-					        	"id" => $role->getId(),
-					        	"nombre" => $role->getName()
+			$role = $user->getRole();
+			$app->render(200,Utils::renderResult(array(
+						        "username" => $user->getUsername(), 
+						        "password" => $user->getPassword(),
+						        "email" => $user->getEmail(),
+						        "role" => array(
+						        	"id" => $role->getId(),
+						        	"nombre" => $role->getName()
+						        )
 					        )
-				        )
-				    )
-				);
+					    ));
+			
+		}
+		catch(Exception $e)
+		{
+			$app->render(200,Utils::renderFault($e->getMessage()));
+		}
 
-	    $app->render(200,$result);
 
 	});
 	
