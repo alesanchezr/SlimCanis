@@ -2,9 +2,12 @@
 
 namespace Entity;
 
+//require_once "vendor/doctrine/orm/lib/Doctrine/ORM/Mapping";
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Entity
  * Equipo
  */
 class Equipo

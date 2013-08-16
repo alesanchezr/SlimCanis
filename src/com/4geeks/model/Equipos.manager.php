@@ -1,5 +1,7 @@
 <?php
 
+//use Entity\Equipo;
+
 require_once "src/com/4geeks/model/Base.manager.php";
 
 class EquiposManager extends BaseManager
@@ -84,6 +86,7 @@ class EquiposManager extends BaseManager
 	{
 		
 		require_once "src/com/4geeks/entities/Entity/Equipo.php";
+
 		/*$qb = self::$EntityManager->createQueryBuilder();
 		$qb->select('e')
 		   ->from('equipos', 'e')
@@ -93,11 +96,11 @@ class EquiposManager extends BaseManager
 		//$query = self::$EntityManager->createQuery('SELECT evu, equ, gol FROM equipos_usuarios evu JOIN equipos equ ON equ.id = evu.equipo_id JOIN golfistas gol ON gol.id = evu.golfistas_id WHERE equ.id = 1');
 		$query = self::$EntityManager->createQueryBuilder();
 		$query->addSelect('e');
-		$query->addSelect('g');
-		$query->addSelect('gs');
+		//$query->addSelect('g');
+		//$query->addSelect('gs');
 
 		$query->from('Equipo', 'e');
-		$query->leftJoin('e.socio_id', 'g');
+		//$query->leftJoin('e.socio_id', 'g');
 		$query->where('e.socio_id = ?1');		
 		$query->setParameter(1, $id);
 
