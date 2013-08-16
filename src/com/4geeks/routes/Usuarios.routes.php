@@ -20,7 +20,23 @@
 		$data = json_decode($app->request()->getBody());
 
 		$usuariosManager = new UsuariosManager();
-		$result = $usuariosManager->crearUsuario($data);
+		$user = $usuariosManager->crearUsuario($data);
+
+		$role = $user->getRole();
+		$result = array(
+				    "success"  => true, 
+				    "response" => array( 
+				        "usuario"   => array(
+					        "username" => $user->getUsername(), 
+					        "password" => $user->getPassword(),
+					        "email" => $user->getEmail(),
+					        "role" => array(
+					        	"id" => $role->getId(),
+					        	"nombre" => $role->getName()
+					        )
+				        )
+				    )
+				);
 
 	    $app->render(200,$result);
 
