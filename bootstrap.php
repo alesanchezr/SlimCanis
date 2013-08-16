@@ -58,14 +58,14 @@ $config->setAutoGenerateProxyClasses(true);
  
 //mapping (example uses annotations, could be any of XML/YAML or plain PHP)
 //AnnotationRegistry::registerFile(__DIR__ . '/library/doctrine-orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
-/*AnnotationRegistry::registerFile(__DIR__ . '/vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
+AnnotationRegistry::registerFile(__DIR__ . '/vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
 $driver = new Doctrine\ORM\Mapping\Driver\AnnotationDriver(
     new Doctrine\Common\Annotations\AnnotationReader(),
     array(__DIR__ . '/src/com/4geeks/entities/Entity')
     //array(__DIR__ . '/library/Entity')
 
 );
-$config->setMetadataDriverImpl($driver);*/
+$config->setMetadataDriverImpl($driver);
 $config->setMetadataCacheImpl($cache);
  
 //getting the EntityManager
