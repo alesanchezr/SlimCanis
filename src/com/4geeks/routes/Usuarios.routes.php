@@ -13,8 +13,9 @@
 		    "email": "1111@ccc.com",
 		    "rol": "socio"
 		}
-
-	$app->post('/usuarios', $authenticate($app), function() use ($app){
+	*/
+	//$app->post('/usuarios', $authenticate($app), function() use ($app){
+	$app->post('/usuarios', function() use ($app){
 
 		$data = json_decode($app->request()->getBody());
 
@@ -24,7 +25,7 @@
 	    $app->render(200,$result);
 
 	});
-	*/
+	
 	
 
 	//Este es un ejemplo de uso de routing con slim
