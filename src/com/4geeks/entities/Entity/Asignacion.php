@@ -94,14 +94,14 @@ class Asignacion
     /**
      * @var string
      *
-     * @ORM\Column(name="createdate", type="string", nullable=true)
+     * @ORM\Column(name="createdate", type="string")
      */
     private $createdate;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="updatedate", type="string", nullable=true)
+     * @ORM\Column(name="updatedate", type="string")
      */
     private $updatedate;
 

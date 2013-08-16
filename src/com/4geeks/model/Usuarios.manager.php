@@ -44,27 +44,8 @@ class UsuariosManager extends BaseManager
 			self::$EntityManager->persist($user);
 			self::$EntityManager->flush();
 
-			$role = $user->getRole();
-			$result = array(
-					    "success"  => true, 
-					    "response" => array( 
-					        "usuario"   => array(
-					        	"id" => $user->getId(),
-						        "username" => $user->getUsername(), 
-						        "password" => $user->getPassword(),
-						        "email" => $user->getEmail(),
-						        "role" => array(
-						        	"id" => $role->getId(),
-						        	"nombre" => $role->getName()
-						        )
-					        )
-					    )
-					);
-
-			return $result;
+			return $user;
 		}
-
-		return array();
 	}
 
 	public function getEquipos()
