@@ -1,6 +1,6 @@
 <?php
 
-//use Entity\Equipo;
+use Entity\Equipo;
 
 require_once "src/com/4geeks/model/Base.manager.php";
 
@@ -85,7 +85,7 @@ class EquiposManager extends BaseManager
 	public function getEquipos($id)
 	{
 		
-		require_once "src/com/4geeks/entities/Entity/Equipo.php";
+		//require_once "src/com/4geeks/entities/Entity/Equipo.php";
 
 		/*$qb = self::$EntityManager->createQueryBuilder();
 		$qb->select('e')
@@ -94,18 +94,19 @@ class EquiposManager extends BaseManager
 		   ->setParameter(1, $id);*/
 		//$query = self::$EntityManager->createQuery('SELECT e, g, g2 FROM Equipos e LEFT JOIN e.golfista_id g LEFT JOIN e.golfistas_id g2 WHERE e.golfista_id = ?1');
 		//$query = self::$EntityManager->createQuery('SELECT evu, equ, gol FROM equipos_usuarios evu JOIN equipos equ ON equ.id = evu.equipo_id JOIN golfistas gol ON gol.id = evu.golfistas_id WHERE equ.id = 1');
-		$query = self::$EntityManager->createQueryBuilder();
-		$query->addSelect('e');
+		//$query = self::$EntityManager->createQueryBuilder();
+		//$query->addSelect('e');
 		//$query->addSelect('g');
 		//$query->addSelect('gs');
 
-		$query->from('Equipo', 'e');
+		//$query->from('Equipo', 'e');
 		//$query->leftJoin('e.socio_id', 'g');
-		$query->where('e.socio_id = ?1');		
-		$query->setParameter(1, $id);
+		//$query->where('e.socio_id = ?1');		
+		//$query->setParameter(1, $id);
 
+		$array = self::$EntityManager->find('Entity\Equipo', 1);
 		//print_r($query);
-		$array = $query->getQuery()->getResult(2);//->getQuery()->getArrayResult();
+		//$array = $query->getQuery()->getResult(2);//->getQuery()->getArrayResult();
 		//self::$EntityManager->detach($array);
 
 		print_r($array);
