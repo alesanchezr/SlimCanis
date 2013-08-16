@@ -48,7 +48,8 @@ class UsuariosManager extends BaseManager
 			$result = array(
 					    "success"  => true, 
 					    "response" => array( 
-					        "usurio"   => array(
+					        "usuario"   => array(
+					        	"id" => $user->getId(),
 						        "username" => $user->getUsername(), 
 						        "password" => $user->getPassword(),
 						        "email" => $user->getEmail(),
