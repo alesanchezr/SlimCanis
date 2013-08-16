@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Equipo
 {
     /**
-     * @var integer
+     * @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue
      */
     private $id;
 
