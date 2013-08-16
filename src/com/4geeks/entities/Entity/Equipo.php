@@ -2,58 +2,81 @@
 
 namespace Entity;
 
-//require_once "vendor/doctrine/orm/lib/Doctrine/ORM/Mapping";
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
  * Equipo
+ *
+ * @ORM\Table(name="equipo", indexes={@ORM\Index(name="fk_equipo_socio_idx", columns={"socio_id"})})
+ * @ORM\Entity(repositoryClass="Entity\EquipoRepository")
  */
 class Equipo
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="socio_id", type="integer")
      */
     private $socio_id;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="handicap_promedio", type="smallint")
      */
     private $handicap_promedio;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="createdate", type="string")
      */
     private $createdate;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="updatedate", type="string")
      */
     private $updatedate;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Entity\Asignacion", mappedBy="equipo")
      */
     private $asignacions;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Entity\Integrante", mappedBy="equipo")
      */
     private $integrantes;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Entity\Reservacion", mappedBy="equipo")
      */
     private $reservacions;
 
     /**
      * @var \Entity\Socio
+     *
+     * @ORM\ManyToOne(targetEntity="Entity\Socio", inversedBy="equipos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="socio_id", referencedColumnName="id", nullable=false)
+     * })
      */
     private $socio;
 

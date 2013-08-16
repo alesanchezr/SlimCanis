@@ -6,96 +6,149 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Asignacion
+ *
+ * @ORM\Table(name="asignacion", indexes={@ORM\Index(name="reservacion_id_UNIQUE", columns={"reservacion_id"}), @ORM\Index(name="fk_asignacion_cadi_idx", columns={"cadi_id"}), @ORM\Index(name="fk_asignacion_equipo_idx", columns={"equipo_id"}), @ORM\Index(name="fk_asignacion_socio_idx", columns={"socio_id"}), @ORM\Index(name="index_fecha_asignada", columns={"fecha_asignada"}), @ORM\Index(name="index_estatus", columns={"estatus"})})
+ * @ORM\Entity(repositoryClass="Entity\AsignacionRepository")
  */
 class Asignacion
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="reservacion_id", type="integer", unique=true)
      */
     private $reservacion_id;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="equipo_id", type="integer")
      */
     private $equipo_id;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="socio_id", type="integer")
      */
     private $socio_id;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="cadi_id", type="integer", nullable=true)
      */
     private $cadi_id;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="hoyo", type="integer")
      */
     private $hoyo;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="fecha_asignada", type="string")
      */
     private $fecha_asignada;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="fecha_inicio", type="string", nullable=true)
      */
     private $fecha_inicio;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="fecha_fin", type="string", nullable=true)
      */
     private $fecha_fin;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="estatus", type="string", length=20)
      */
     private $estatus;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="editado_por", type="string", length=45, nullable=true)
      */
     private $editado_por;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="createdate", type="string", nullable=true)
      */
     private $createdate;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="updatedate", type="string", nullable=true)
      */
     private $updatedate;
 
     /**
      * @var \Entity\Reservacion
+     *
+     * @ORM\OneToOne(targetEntity="Entity\Reservacion")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="reservacion_id", referencedColumnName="id", unique=true, nullable=false)
+     * })
      */
     private $reservacion;
 
     /**
      * @var \Entity\Equipo
+     *
+     * @ORM\ManyToOne(targetEntity="Entity\Equipo", inversedBy="asignacions")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="equipo_id", referencedColumnName="id", nullable=false)
+     * })
      */
     private $equipo;
 
     /**
      * @var \Entity\Socio
+     *
+     * @ORM\ManyToOne(targetEntity="Entity\Socio", inversedBy="asignacions")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="socio_id", referencedColumnName="id", nullable=false)
+     * })
      */
     private $socio;
 
     /**
      * @var \Entity\Cadi
+     *
+     * @ORM\ManyToOne(targetEntity="Entity\Cadi", inversedBy="asignacions")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cadi_id", referencedColumnName="id")
+     * })
      */
     private $cadi;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Entity\Invitado", mappedBy="asignacions")
      */
     private $invitados;
 

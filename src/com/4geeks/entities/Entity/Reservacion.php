@@ -6,61 +6,97 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Reservacion
+ *
+ * @ORM\Table(name="reservacion", indexes={@ORM\Index(name="fk_reservacion_socio_idx", columns={"socio_id"}), @ORM\Index(name="fk_reservacion_equipo_idx", columns={"equipo_id"}), @ORM\Index(name="index_estatus", columns={"estatus"}), @ORM\Index(name="index_fecha_solicitada", columns={"fecha_solicitada"})})
+ * @ORM\Entity(repositoryClass="Entity\ReservacionRepository")
  */
 class Reservacion
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="socio_id", type="integer")
      */
     private $socio_id;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="equipo_id", type="integer")
      */
     private $equipo_id;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="fecha_solicitada", type="string")
      */
     private $fecha_solicitada;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="estatus", type="string", length=25)
      */
     private $estatus;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="editado_por", type="string", length=45, nullable=true)
      */
     private $editado_por;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="createdate", type="string")
      */
     private $createdate;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="updatedate", type="string")
      */
     private $updatedate;
 
     /**
      * @var \Entity\Asignacion
+     *
+     * @ORM\OneToOne(targetEntity="Entity\Asignacion")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="reservacion_id", referencedColumnName="id", unique=true, nullable=false)
+     * })
      */
     private $asignacion;
 
     /**
      * @var \Entity\Socio
+     *
+     * @ORM\ManyToOne(targetEntity="Entity\Socio", inversedBy="reservacions")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="socio_id", referencedColumnName="id", nullable=false)
+     * })
      */
     private $socio;
 
     /**
      * @var \Entity\Equipo
+     *
+     * @ORM\ManyToOne(targetEntity="Entity\Equipo", inversedBy="reservacions")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="equipo_id", referencedColumnName="id", nullable=false)
+     * })
      */
     private $equipo;
 

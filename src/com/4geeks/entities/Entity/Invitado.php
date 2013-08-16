@@ -6,56 +6,89 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Invitado
+ *
+ * @ORM\Table(name="invitado", indexes={@ORM\Index(name="email_UNIQUE", columns={"email"}), @ORM\Index(name="cedula_UNIQUE", columns={"cedula"})})
+ * @ORM\Entity(repositoryClass="Entity\InvitadoRepository")
  */
 class Invitado
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=50)
      */
     private $nombre;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="cedula", type="integer", unique=true)
      */
     private $cedula;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=100, unique=true)
      */
     private $email;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="telefono", type="string", length=20, nullable=true)
      */
     private $telefono;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="handicap", type="smallint")
      */
     private $handicap;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="createdate", type="string")
      */
     private $createdate;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="updatedate", type="string")
      */
     private $updatedate;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Entity\Integrante", mappedBy="invitado")
      */
     private $integrantes;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Entity\Asignacion", inversedBy="invitados")
+     * @ORM\JoinTable(name="invitacion",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="invitado_id", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="asignacion_id", referencedColumnName="id")
+     *   }
+     * )
      */
     private $asignacions;
 

@@ -6,76 +6,112 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Socio
+ *
+ * @ORM\Table(name="socio", indexes={@ORM\Index(name="cedula_UNIQUE", columns={"cedula"}), @ORM\Index(name="numero_socio_UNIQUE", columns={"numero_socio"}), @ORM\Index(name="fk_socio_user_idx", columns={"user_id"})})
+ * @ORM\Entity(repositoryClass="Entity\SocioRepository")
  */
 class Socio
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="user_id", type="integer")
      */
     private $user_id;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=50)
      */
     private $nombre;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="cedula", type="integer", unique=true)
      */
     private $cedula;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="numero_socio", type="string", length=20, unique=true)
      */
     private $numero_socio;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="handicap", type="smallint")
      */
     private $handicap;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="telefono", type="string", length=45, nullable=true)
      */
     private $telefono;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="createdate", type="string")
      */
     private $createdate;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="updatedate", type="string")
      */
     private $updatedate;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Entity\Asignacion", mappedBy="socio")
      */
     private $asignacions;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Entity\Equipo", mappedBy="socio")
      */
     private $equipos;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Entity\Integrante", mappedBy="socio")
      */
     private $integrantes;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Entity\Reservacion", mappedBy="socio")
      */
     private $reservacions;
 
     /**
      * @var \Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Entity\User", inversedBy="socios")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+     * })
      */
     private $user;
 

@@ -6,21 +6,32 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Role
+ *
+ * @ORM\Table(name="role", indexes={@ORM\Index(name="name_UNIQUE", columns={"name"})})
+ * @ORM\Entity(repositoryClass="Entity\RoleRepository")
  */
 class Role
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=45, unique=true)
      */
     private $name;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Entity\User", mappedBy="role")
      */
     private $users;
 

@@ -6,41 +6,60 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Cadi
+ *
+ * @ORM\Table(name="cadi", indexes={@ORM\Index(name="cedula_UNIQUE", columns={"cedula"})})
+ * @ORM\Entity(repositoryClass="Entity\CadiRepository")
  */
 class Cadi
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=50)
      */
     private $nombre;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="cedula", type="integer", unique=true)
      */
     private $cedula;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="telefono", type="string", length=20, nullable=true)
      */
     private $telefono;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="createdate", type="string")
      */
     private $createdate;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="updatedate", type="string")
      */
     private $updatedate;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Entity\Asignacion", mappedBy="cadi")
      */
     private $asignacions;
 

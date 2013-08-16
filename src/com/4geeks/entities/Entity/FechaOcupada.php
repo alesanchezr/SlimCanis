@@ -6,41 +6,60 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * FechaOcupada
+ *
+ * @ORM\Table(name="fecha_ocupada")
+ * @ORM\Entity(repositoryClass="Entity\FechaOcupadaRepository")
  */
 class FechaOcupada
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="fecha_inicio", type="string")
      */
     private $fecha_inicio;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="fecha_fin", type="string")
      */
     private $fecha_fin;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="motivo", type="string", length=255)
      */
     private $motivo;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="editado_por", type="string", length=45, nullable=true)
      */
     private $editado_por;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="createdate", type="string")
      */
     private $createdate;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="updatedate", type="string")
      */
     private $updatedate;
 

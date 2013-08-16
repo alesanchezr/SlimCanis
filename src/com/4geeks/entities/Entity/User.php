@@ -6,51 +6,77 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * User
+ *
+ * @ORM\Table(name="user", indexes={@ORM\Index(name="username_UNIQUE", columns={"username"}), @ORM\Index(name="email_UNIQUE", columns={"email"}), @ORM\Index(name="fk_user_1_idx", columns={"role_id"})})
+ * @ORM\Entity(repositoryClass="Entity\UserRepository")
  */
 class User
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="username", type="string", length=45, unique=true)
      */
     private $username;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="password", type="string", length=100)
      */
     private $password;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="role_id", type="integer")
      */
     private $role_id;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=100, unique=true)
      */
     private $email;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="createdate", type="string")
      */
     private $createdate;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="updatedate", type="string")
      */
     private $updatedate;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Entity\Socio", mappedBy="user")
      */
     private $socios;
 
     /**
      * @var \Entity\Role
+     *
+     * @ORM\ManyToOne(targetEntity="Entity\Role", inversedBy="users")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="role_id", referencedColumnName="id", nullable=false)
+     * })
      */
     private $role;
 

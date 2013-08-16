@@ -1,5 +1,7 @@
 <?php
 
+use Entity\Equipo;
+
 require_once "src/com/4geeks/model/Base.manager.php";
 
 class UsuariosManager extends BaseManager
@@ -56,18 +58,19 @@ class UsuariosManager extends BaseManager
 		}
 	}
 
-	public function getEquipos($id)
+	public function getEquipos()
 	{
-		require_once "src/com/4geeks/entities/Equipos.php";
+		//require_once "src/com/4geeks/entities/Entity/Equipo.php";
+		$array = array();
 		$qb = self::$EntityManager->createQueryBuilder();
 		$qb->select('e.*')
-		   ->from('equipo', 'e')
-		   ->where('e.socio = ?1')
-		   ->setParameter(1, $id);
+		   ->from('Entity\Equipo', 'e');
 		$array = $qb->getQuery()->getArrayResult();
 
 		//print_r($array);
 		return $array;
+		
+		return array("asd");
 	}
 
 }
