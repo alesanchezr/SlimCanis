@@ -3,3 +3,6 @@ vendor/
 
 #canis-slim definitions
 globals.php
+.project
+*.bak
+*.*~
