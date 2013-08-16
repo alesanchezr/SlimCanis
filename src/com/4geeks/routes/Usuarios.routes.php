@@ -35,6 +35,7 @@
 		$result = $usuariosManager->getEquipos();
 
 	    $app->render(200,$result);
+	    //$app->render(200,array());
 
 	});
 

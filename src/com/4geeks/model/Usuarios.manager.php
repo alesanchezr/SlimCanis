@@ -60,17 +60,18 @@ class UsuariosManager extends BaseManager
 
 	public function getEquipos()
 	{
+		
 		//require_once "src/com/4geeks/entities/Entity/Equipo.php";
 		$array = array();
 		$qb = self::$EntityManager->createQueryBuilder();
-		$qb->select('e.*')
+		$qb->select('e.id')
 		   ->from('Entity\Equipo', 'e');
 		$array = $qb->getQuery()->getArrayResult();
 
 		//print_r($array);
 		return $array;
 		
-		return array("asd");
+		//return array("asd");
 	}
 
 }
