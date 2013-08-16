@@ -47,9 +47,9 @@ Entity\Asignacion:
             length: 45
             nullable: true
         createdate:
-            nullable: true
+
         updatedate:
-            nullable: true
+
     oneToOne:
         reservacion:
             targetEntity: Reservacion
