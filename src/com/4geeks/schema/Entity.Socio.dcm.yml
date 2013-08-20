@@ -34,9 +34,9 @@ Entity\Socio:
             length: 45
             nullable: true
         createdate:
-
+            nullable: true
         updatedate:
-
+            nullable: true
     oneToMany:
         asignacions:
             targetEntity: Asignacion

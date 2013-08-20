@@ -29,9 +29,9 @@ Entity\User:
             length: 100
             unique: true
         createdate:
-
+            nullable: true
         updatedate:
-
+            nullable: true
     oneToMany:
         socios:
             targetEntity: Socio

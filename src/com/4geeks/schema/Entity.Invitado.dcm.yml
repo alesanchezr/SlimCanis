@@ -30,9 +30,9 @@ Entity\Invitado:
         handicap:
             type: smallint
         createdate:
-
+            nullable: true
         updatedate:
-
+            nullable: true
     oneToMany:
         integrantes:
             targetEntity: Integrante
