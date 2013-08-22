@@ -21,7 +21,7 @@
 
 		try
 		{
-			
+
 			$usuariosManager = new UsuariosManager();
 			$user = $usuariosManager->crearUsuario($data);
 
@@ -38,7 +38,7 @@
 					    ));
 			
 		}
-		catch(Exception $e)
+		catch(ErrorException $e)
 		{
 			$app->render(200,Utils::renderFault($e->getMessage()));
 		}
@@ -52,11 +52,17 @@
 	// POST route
 	$app->get('/usuarios', function() use ($app){
 
-		$usuariosManager = new UsuariosManager();
-		$result = $usuariosManager->getEquipos();
+		try
+		{
+			$usuariosManager = new UsuariosManager();
+			$result = $usuariosManager->getUsuarios();
 
-	    $app->render(200,$result);
-	    //$app->render(200,array());
+			$app->render(200,Utils::renderResult($result));
+		}
+		catch(ErrorException $e)
+		{
+			$app->render(200,Utils::renderFault($e->getMessage()));
+		}
 
 	});
 

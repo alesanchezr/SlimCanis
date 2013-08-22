@@ -13,7 +13,7 @@ class Utils
     public static function renderFault($message)
     {
 		return array(
-				    "success"  => false, 
+				    "success"  => "false", 
 				    "response" => array(
 				    	"message" => $message
 				    	)
