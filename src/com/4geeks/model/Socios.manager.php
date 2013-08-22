@@ -184,9 +184,10 @@ class SociosManager extends BaseManager
 	{
 		$qb = self::$EntityManager->createQueryBuilder();
 		$qb->select('s')
-		   ->from('Entity\Socio', 's');
+		   ->from('Entity\Socio', 's')
+		   ->where('s.numero_socio = :nrosocio')
+		   ->setParameter('nrosocio',$numero);
 
-		//return array();
 		$array = $qb->getQuery()->getResult(2);
 		return $array;
 	}

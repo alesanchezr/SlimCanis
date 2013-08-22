@@ -15,12 +15,21 @@
 	//$app->get('/socio', $authenticate($app), function() use ($app){
 	$app->get('/buscar_socios/:numero', function($numero) use ($app){
 
-		//die("hola ".$numero);
-		$socioManager = new SociosManager();
-		$result = $socioManager->buscarPorNumero($numero);
+		try
+		{
+			$socioManager = new SociosManager();
+			$result = $socioManager->buscarPorNumero($numero);
 
-	    $app->render(200,$result);
-	    //$app->render(200,array());
+			if(count($result) > 0)
+			{
+				$app->render(200,Utils::renderResult($result));
+			}
+	    	else $app->render(200,Utils::renderResult(array()));
+		}
+		catch(ErrorException $e)
+		{
+	    	$app->render(200,Utils::renderFault($e->getMessage()));
+		}
 
 	});
 
@@ -35,10 +44,20 @@
 	//$app->get('/socio', $authenticate($app), function() use ($app){
 	$app->get('/buscar_socios_e_invitados/:nombre', function($nombre) use ($app){
 
-		$socioManager = new SociosManager();
-		$result = $socioManager->buscarPorNombreNumero($nombre);
+		try
+		{
 
-	    $app->render(200,$result);
+			//TODO: Falta implementar el metodo buscarPorNombreONumero()
+			//$socioManager = new SociosManager();
+			//$result = $socioManager->buscarPorNombreNumero($nombre);
+			
+	    	//$app->render(200,Utils::renderResult($result));
+	    	$app->render(200,Utils::renderResult("Falta implementar el metodo buscarPorNombreYNumero"));
+		}
+		catch(ErrorException $e)
+		{
+	    	$app->render(200,Utils::renderFault($e->getMessage()));
+		}
 
 	});
 
