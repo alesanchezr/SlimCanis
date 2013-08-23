@@ -126,6 +126,46 @@ class SociosManager extends BaseManager
 		}
 	}
 
+	/*
+		ENTRADA:
+
+		VACIO
+
+		SALIDA:
+
+		$result = array(
+				    "success"  => true, 
+				    "response" => array( 
+				        array(
+				            "id" => 1,
+				            "usuario_id" => 1,
+				            "numero_socio" => 1111,
+				            "handicap" => 12,
+				            "socio" => "NULL"
+				        ),
+				        array(
+				            "id" => 2,
+				            "usuario_id" => "NULL",
+				            "numero_socio" => "NULL",
+				            "handicap" => 12,
+				            "socio" => 1111
+				        )
+				    )
+				);
+
+	*/
+    public function buscarPorNumero($numero)
+	{
+		$qb = self::$EntityManager->createQueryBuilder();
+		$qb->select('s')
+		   ->from('Entity\Socio', 's')
+		   ->where('s.numero_socio = :nrosocio')
+		   ->setParameter('nrosocio',$numero);
+
+		$array = $qb->getQuery()->getResult(2);
+		return $array;
+	}
+
 }
 
 ?>

@@ -16,7 +16,7 @@
 
 			break;
 
-		} catch (Exception $e) {
+		} catch (ErrorException $e) {
 			$result = array(
 					    "success"  => false, 
 					    "response" => array(
