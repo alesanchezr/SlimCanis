@@ -87,32 +87,6 @@ class SociosManager extends BaseManager
 		    "role_id": "1"
 		}
 
-		SALIDA:
-
-		$result = array(
-				    "success": true, 
-				    "response": array(
-				        array(
-				            "nombre": "Bernardo Belutini",
-				            "cedula": 5329429,
-				            "numero_socio":1111,
-				            "handicap": 12,
-				            "user": array(
-				                "id": 1, 
-				                "username": 123456, 
-				                "password": "dRs32sdlaSAds",
-				                "email": "1111@ccc.com",
-				                "role": array( 
-				                    "id": 1,
-				                    "nombre": "socio"
-				                ),
-				                "createdate": "1969-01-01T01:00:01"
-				            ),
-				            "createdate": "1969-01-01T01:01:01"
-				        )
-    				)
-				);
-
 	*/
     public  function crear($data)
 	{
@@ -146,7 +120,7 @@ class SociosManager extends BaseManager
 			return $socio;
 
 		}else{
-			
+
 			throw new Exception("Error creando usuario", 1);
 			
 		}
