@@ -1,5 +1,7 @@
 <?php
 
+use Entity\Socio;
+
 require_once "src/com/4geeks/model/Base.manager.php";
 require_once "src/com/4geeks/model/Usuarios.manager.php";
 
@@ -7,32 +9,7 @@ class SociosManager extends BaseManager
 {
 
 	/*
-		ENTRADA:
-
-		VACIO
-
-		SALIDA:
-
-		$result = array(
-				    "success"  => true, 
-				    "response" => array( 
-				        array(
-				            "id" => 1,
-				            "usuario_id" => 1,
-				            "numero_socio" => 1111,
-				            "handicap" => 12,
-				            "socio" => "NULL"
-				        ),
-				        array(
-				            "id" => 2,
-				            "usuario_id" => "NULL",
-				            "numero_socio" => "NULL",
-				            "handicap" => 12,
-				            "socio" => 1111
-				        )
-				    )
-				);
-
+		Devuelve lista socios (sin parsear)
 	*/
     public function listar()
 	{
@@ -75,30 +52,20 @@ class SociosManager extends BaseManager
 	}
 
 	/*
-		ENTRADA:
-
-		{
-			"nombre": "Bernardo Belutini",
-		    "cedula": 5329429,
-		    "numero_socio":1111,
-		    "username": 1111, 
-		    "password": "dRs32sdlaSAds",
-		    "email": "1111@ccc.com",
-		    "role_id": "1"
-		}
-
+		Devuelve socio creado
 	*/
     public  function crear($data)
 	{
-		//TODO: Generate USER from Usuarios.manager.php
-
+		//print_r($data);
 		$usuariosManager = new UsuariosManager();
 		$userToCreate  = array(
 							"username" => $data->username, 
 					    	"password" => $data->password,
 					    	"email" => $data->email,
-					    	"rol" => 1 
+					    	"role_id" => $data->role_id 
 				    	);
+		$userToCreate = json_encode($userToCreate);
+		$userToCreate = json_decode($userToCreate);
 		$nuevoUsuario = $usuariosManager->crearUsuario($userToCreate);
 
 		if ($nuevoUsuario) {
@@ -120,7 +87,8 @@ class SociosManager extends BaseManager
 			return $socio;
 
 		}else{
-
+			self::$EntityManager->getConnection()->rollback();
+			self::$EntityManager->close();
 			throw new Exception("Error creando usuario", 1);
 			
 		}
@@ -161,6 +129,19 @@ class SociosManager extends BaseManager
 		   ->from('Entity\Socio', 's')
 		   ->where('s.numero_socio = :nrosocio')
 		   ->setParameter('nrosocio',$numero);
+
+		$array = $qb->getQuery()->getResult(2);
+		return $array;
+	}
+
+	public function buscarPorNombreNumero($nombre)
+	{
+		$qb = self::$EntityManager->createQueryBuilder();
+		$qb->select('s')
+		   ->from('Entity\Socio', 's')
+		   ->where('s.numero_socio = :nrosocio OR s.nombre = :nombre')
+		   ->setParameter('nrosocio',$nombre)
+		   ->setParameter('nombre',$nombre);
 
 		$array = $qb->getQuery()->getResult(2);
 		return $array;

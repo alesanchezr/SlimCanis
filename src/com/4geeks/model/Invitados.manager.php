@@ -150,6 +150,17 @@ class InvitadosManager extends BaseManager
 */
 	}
 
+	public function buscarPorCedula($cedula)
+	{
+		$qb = self::$EntityManager->createQueryBuilder();
+		$qb->select('s')
+		   ->from('Entity\Invitado', 's')
+		   ->where('s.cedula = ?1')
+		   ->setParameter(1, $cedula);
+		$array = $qb->getQuery()->getResult(2);
+		return $array;
+	}
+
 }
 
 ?>

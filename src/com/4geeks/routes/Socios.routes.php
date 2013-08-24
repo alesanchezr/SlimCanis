@@ -2,22 +2,61 @@
 
 	require_once 'src/com/4geeks/model/Socios.manager.php';
 
-	// POST route
-
 	/*
 		ENTRADA:
 
 		VACIO
 
+		SALIDA:
+
+		{ 
+		    "success": true, 
+		    "response": [
+		        {
+		            "id": 1,
+		            "nombre": "Bernardo Belutini",
+		            "cedula": 5329429,
+		            "user_id":1,
+		            "numero_socio":1111,
+		            "handicap":12,
+		            "createdate": "1969-01-01T01:01:01"
+		        },
+		        {
+		            "id": 2,
+		            "nombre": "Pepito Montalbán",
+		            "cedula": 93029301
+		            "user_id":2,
+		            "numero_socio":2222,
+		            "handicap":5,
+		            "createdate": "1969-01-01T01:01:01"
+		        }
+		    ]
+		}
 	*/
+
 	//$app->get('/socio', $authenticate($app), function() use ($app){
 	$app->get('/socios', function() use ($app){
 
 		$socioManager = new SociosManager();
-		$result = $socioManager->listar();
+		$socios = $socioManager->listar();
 
-	    $app->render(200,$result);
+		$result = array();
 
+		foreach ($socios as $key => $value) {
+			$socio = "";
+			$socio = array(
+				"id" => utf8_encode($value["id"]),
+				"user_id" => utf8_encode($value["user_id"]),
+				"nombre" => utf8_encode($value["nombre"]),
+				"cedula" => utf8_encode($value["cedula"]),
+				"numero_socio" => utf8_encode($value["numero_socio"]),
+				"handicap" => utf8_encode($value["handicap"]),
+				"createdate" => utf8_encode($value["createdate"])
+				);
+			array_push($result, $socio);
+		}
+
+	    $app->render(200,Utils::renderResult($result));
 	});
 
 	// POST route
@@ -26,39 +65,49 @@
 		ENTRADA:
 
 		{
-		    "usuario_id":1,
+		    "nombre": "Bernardo Belutini",
+		    "cedula": 5329429,
 		    "numero_socio":1111,
-		    "handicap":12,
-		    "socio":"NULL"
+		    "telefono": "04123428732",
+		    "username": 1111, 
+		    "password": "dRs32sdlaSAds",
+		    "email": "1111@ccc.com",
+		    "role_id": "3"
 		}
 
 		SALIDA:
 
-		$result = array(
-			            "nombre": "Bernardo Belutini",
-			            "cedula": 5329429,
-			            "numero_socio":1111,
-			            "handicap": 12,
-			            "user": array(
-			                "id": 1, 
-			                "username": 123456, 
-			                "password": "dRs32sdlaSAds",
-			                "email": "1111@ccc.com",
-			                "role": array( 
-			                    "id": 1,
-			                    "nombre": "socio"
-			                ),
-			                "createdate": "1969-01-01T01:00:01"
-			            ),
-			            "createdate": "1969-01-01T01:01:01"
-				);
+		{ 
+		    "success": true, 
+		    "response": [
+		        {
+		            "nombre": "Bernardo Belutini",
+		            "cedula": 5329429,
+		            "numero_socio":1111,
+		            "telefono": "04123428732",
+		            "handicap": 12,
+		            "user":{
+		                "id": 1, 
+		                "username": 123456, 
+		                "password": "dRs32sdlaSAds",
+		                "email": "1111@ccc.com",
+		                "role": { 
+		                    "id": 3,
+		                    "nombre": "socio"
+		                },
+		                "createdate": "1969-01-01T01:00:01"
+		            },
+		            "createdate": "1969-01-01T01:01:01"
+		        }
+		    ]
+		}
 	*/
 
 	//$app->post('/socios', $authenticate($app), function() use ($app){
-	$app->post('/socios', $authenticate($app), function() use ($app){
+	$app->post('/socios', function() use ($app){
 
 		$data = json_decode($app->request()->getBody());
-
+		
 		$gfManager = new SociosManager();
 
 		try {
