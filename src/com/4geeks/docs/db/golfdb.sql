@@ -105,12 +105,14 @@ ENGINE = InnoDB;
 -- Table `mydb`.`integrante`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`integrante` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `equipo_id` INT NOT NULL,
   `socio_id` INT NULL,
   `invitado_id` INT NULL,
   INDEX `fk_integrantes_equipo_idx` (`equipo_id` ASC),
   INDEX `fk_integrantes_socio_idx` (`socio_id` ASC),
   INDEX `fk_integrantes_invitado_idx` (`invitado_id` ASC),
+  PRIMARY KEY (`id`),
   CONSTRAINT `fk_integrantes_equipo`
     FOREIGN KEY (`equipo_id`)
     REFERENCES `mydb`.`equipo` (`id`)
@@ -252,6 +254,22 @@ CREATE TABLE IF NOT EXISTS `mydb`.`invitacion` (
   CONSTRAINT `fk_invitaciones_asignacion`
     FOREIGN KEY (`asignacion_id`)
     REFERENCES `mydb`.`asignacion` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`ticket`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`ticket` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `reservacion_id` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_ticket_reservacion_idx` (`reservacion_id` ASC),
+  CONSTRAINT `fk_ticket_reservacion`
+    FOREIGN KEY (`reservacion_id`)
+    REFERENCES `mydb`.`reservacion` (`estatus`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

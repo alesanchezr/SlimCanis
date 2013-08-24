@@ -41,6 +41,14 @@ Entity\Reservacion:
                 name: reservacion_id
                 referencedColumnName: id
                 nullable: false
+    oneToMany:
+        tickets:
+            targetEntity: Ticket
+            mappedBy: reservacion
+            joinColumn:
+                name: reservacion_id
+                referencedColumnName: estatus
+                nullable: false
     manyToOne:
         socio:
             targetEntity: Socio
