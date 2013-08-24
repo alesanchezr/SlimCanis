@@ -1,0 +1,24 @@
+Entity\Ticket:
+    type: entity
+    table: ticket
+    repositoryClass: TicketRepository
+    indexes:
+        fk_ticket_reservacion_idx:
+            columns: [reservacion_id]
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        reservacion_id:
+            type: string
+            length: 45
+    manyToOne:
+        reservacion:
+            targetEntity: Reservacion
+            inversedBy: tickets
+            joinColumn:
+                name: reservacion_id
+                referencedColumnName: estatus
+                nullable: false

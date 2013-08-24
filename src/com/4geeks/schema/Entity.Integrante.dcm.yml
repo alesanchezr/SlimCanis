@@ -9,6 +9,11 @@ Entity\Integrante:
             columns: [socio_id]
         fk_integrantes_invitado_idx:
             columns: [invitado_id]
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
     fields:
         equipo_id:
             type: integer
