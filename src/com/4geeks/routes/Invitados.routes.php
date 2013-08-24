@@ -82,7 +82,7 @@
 
 	    	$app->render(200,Utils::renderResult($result));
 
-		} catch (Exception $e) {
+		} catch (ErrorException $e) {
 			
 			$app->render(200,Utils::renderFault($e->getMessage()));
 		}

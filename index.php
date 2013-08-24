@@ -30,7 +30,15 @@ $rootUri = $app->request()->getResourceUri();
 $url = explode('/', trim($rootUri, '/'));
 $first_segment = "";
 if(count($url)>=0) $first_segment = $url[0];
-if($first_segment and $first_segment!='') require_once "src/com/4geeks/routes/".ucfirst($first_segment).'.routes.php';
+if($first_segment and $first_segment!='')
+{
+	if(file_exists ("src/com/4geeks/routes/".ucfirst($first_segment).'.routes.php')) require_once "src/com/4geeks/routes/".ucfirst($first_segment).'.routes.php';
+	else
+	{
+		$first_segment = "general";
+		require_once "src/com/4geeks/routes/General.routes.php";
+	}
+}
 
 
 /**

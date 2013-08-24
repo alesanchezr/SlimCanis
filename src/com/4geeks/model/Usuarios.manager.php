@@ -48,19 +48,27 @@ class UsuariosManager extends BaseManager
 		}
 	}
 
-	public function getEquipos()
+	public function getUsuarios()
 	{
 		
-		$array = array();
+		$users = array();
 		$qb = self::$EntityManager->createQueryBuilder();
-		$qb->select('e.id')
-		   ->from('Entity\Equipo', 'e');
-		$array = $qb->getQuery()->getArrayResult();
-
-		//print_r($array);
-		return $array;
+		$qb->select('e.email, e.id, e.password, e.username, e.role_id')
+		   ->from('Entity\User', 'e');
+		$users = $qb->getQuery()->getResult(2);
 		
-		//return array("asd");
+		$cont = 0;
+		foreach($users as $user)
+		{
+			$role = self::$EntityManager->find('Entity\Role',$user["role_id"]);
+			$user["role"] = array("id" => $role->getId(), "nombre" => $role->getName());
+			unset($user["role_id"]);
+
+			$users[$cont] = $user;
+			$cont++;
+		}
+		return $users;
+		
 	}
 
 }
