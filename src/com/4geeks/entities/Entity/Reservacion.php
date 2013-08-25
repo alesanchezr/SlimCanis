@@ -81,6 +81,13 @@ class Reservacion
     private $asignacion;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Entity\Ticket", mappedBy="reservacion")
+     */
+    private $tickets;
+
+    /**
      * @var \Entity\Socio
      *
      * @ORM\ManyToOne(targetEntity="Entity\Socio", inversedBy="reservacions")
@@ -100,7 +107,14 @@ class Reservacion
      */
     private $equipo;
 
-
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->tickets = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
     /**
      * Get id
      *
@@ -293,6 +307,39 @@ class Reservacion
     public function getAsignacion()
     {
         return $this->asignacion;
+    }
+
+    /**
+     * Add tickets
+     *
+     * @param \Entity\Ticket $tickets
+     * @return Reservacion
+     */
+    public function addTicket(\Entity\Ticket $tickets)
+    {
+        $this->tickets[] = $tickets;
+    
+        return $this;
+    }
+
+    /**
+     * Remove tickets
+     *
+     * @param \Entity\Ticket $tickets
+     */
+    public function removeTicket(\Entity\Ticket $tickets)
+    {
+        $this->tickets->removeElement($tickets);
+    }
+
+    /**
+     * Get tickets
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTickets()
+    {
+        return $this->tickets;
     }
 
     /**
