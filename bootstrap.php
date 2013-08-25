@@ -67,6 +67,12 @@ $driver = new Doctrine\ORM\Mapping\Driver\AnnotationDriver(
 );
 $config->setMetadataDriverImpl($driver);
 $config->setMetadataCacheImpl($cache);
+
+//YEAR / MONTH / DAY functions for DQL 
+
+$config->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
+$config->addCustomDatetimeFunction('MONTH', 'DoctrineExtensions\Query\Mysql\Month');
+$config->addCustomDatetimeFunction('DAY', 'DoctrineExtensions\Query\Mysql\Day');
  
 //getting the EntityManager
 /*$em = EntityManager::create(
