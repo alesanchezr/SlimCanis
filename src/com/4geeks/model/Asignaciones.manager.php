@@ -119,58 +119,23 @@ class AsignacionesManager extends BaseManager
 	*	VACIO
 	*
 	**/
-    public  function sortear($data)
+    public  function generarAsignaciones($data)
 	{
-		/*
-		$result = array(
-		    "success"  => true, 
-		    "response" => array(
-		        array(
-		            "id" => 8, 
-		            "fecha" => "1969-01-02 06:30:00", 
-		            "estatus" => "pendiente", 
-		            "equipo" => array(
-		                "id" => 1,
-		                "perfil_id" => 1, 
-		                "handicap_promedio" => 12,
-		                "integrantes" => array(
-		                    array(
-		                        "id" => 1,
-		                        "nombre" => "Antonio Pérez",
-		                        "usuario" => array(
-		                            "username" => 1111,
-		                            "email" => "1111@ccc.com"
-		                        ),
-		                        "numero_socio" => 1111,
-		                        "handicap" => 12,
-		                        "socio" => "NULL"
-		                    ),
-		                    array(
-		                        "id" => 2,
-		                        "nombre" => "Antonio Pérez",
-		                        "usuario" => array(
-		                            "username" => 2222,
-		                            "email" => "2222@ccc.com"
-		                        ),
-		                        "numero_socio"=>2222,
-		                        "handicap"=>10,
-		                        "socio"=>"NULL"
-		                    ),
-		                    array(
-		                        "id" => 3,
-		                        "nombre" => "Antonio Pérez",
-		                        "usuario" => array(),
-		                        "numero_socio" => "NULL",
-		                        "handicap" => 25,
-		                        "socio" => 1111
-		                    )
-		                )
-		            ),
-		            "asignacion" => array()
-		        )
-		    )
-		);
-		*/
+		$asignaciones = self::sorteo($data);
+		$result = array();
+		foreach ($asignaciones as $key => $asignacion) {
+			$newAsignacion = new Asignacion();
+			$newAsignacion->setReservacion($asignacion["reservacion"]);
+			$newAsignacion->setEquipo($asignacion["reservacion"]->getEquipo());
+			$newAsignacion->setSocio($asignacion["reservacion"]->getEquipo()->getSocio());
+			$newAsignacion->setFechaAsignada($asignacion["horario"]);
+			$newAsignacion->setHoyo($asignacion["hoyo"]);
+			$newAsignacion->setEstatus("pendiente");
+
+			self::$EntityManager->persist($newAsignacion);
+			array_push($result, $newAsignacion);
+		}
+
 		return $result;
 	}
 	// POST route
@@ -415,9 +380,9 @@ class AsignacionesManager extends BaseManager
 
 				for ($j=0; $j < $hoyos; $j++) { 
 					$ss = self::getSorteoParaHora($temp, $seleccionados);
-					array_push($result, array("hoyo ".$j." ".date("Y-m-d\Th:i:s",$temp) => $ss));
 					if ($ss >0) {
-						array_push($seleccionados, $ss);
+						array_push($result, self::wrapAsignacionFromSorteo($j,date("Y-m-d\Th:i:s",$temp),$ss));//array("hoyo ".$j." ".date("Y-m-d\Th:i:s",$temp) => $ss));
+						//array_push($seleccionados, $ss);
 					}
 					
 					//echo "\n";
@@ -430,9 +395,9 @@ class AsignacionesManager extends BaseManager
 				//array_push($result, array("".date("Y-m-d\Th:i:s",$temp) => self::getSorteoParaHora($temp)));
 				//echo "\n";
 				$ss = self::getSorteoParaHora($temp, $seleccionados);
-				array_push($result, array("hoyo 0 ".date("Y-m-d\Th:i:s",$temp) => $ss));
 				if ($ss >0) {
-					array_push($seleccionados, $ss);
+					array_push($result, self::wrapAsignacionFromSorteo(1,date("Y-m-d\Th:i:s",$temp),$ss));//array("hoyo 0 ".date("Y-m-d\Th:i:s",$temp) => $ss));
+					//array_push($seleccionados, $ss);
 				}
 				$temp = $temp+600;
 			}
@@ -448,9 +413,9 @@ class AsignacionesManager extends BaseManager
 
 				for ($j=0; $j < $hoyos; $j++) { 
 					$ss = self::getSorteoParaHora($temp, $seleccionados);
-					array_push($result, array("hoyo ".$j." ".date("Y-m-d\Th:i:s",$temp) => $ss));
 					if ($ss >0) {
-						array_push($seleccionados, $ss);
+						array_push($result, self::wrapAsignacionFromSorteo($j,date("Y-m-d\Th:i:s",$temp),$ss));//array("hoyo ".$j." ".date("Y-m-d\Th:i:s",$temp) => $ss));
+						//array_push($seleccionados, $ss);
 					}
 				}
 				$temp = $temp+600;
@@ -476,7 +441,7 @@ class AsignacionesManager extends BaseManager
 			
 		for ($i=0; $i < 4; $i++) { //4 Conjuntos de handicap (0-8,9-12,13-18,19-)
 
-			$qb = self::$EntityManager->createQuery('SELECT COUNT(t) FROM Entity\Ticket t LEFT JOIN t.reservacion r LEFT JOIN r.equipo e WHERE r.fecha_solicitada = ?1 AND e.handicap_promedio between ?2 AND ?3');
+			$qb = self::$EntityManager->createQuery("SELECT COUNT(t) FROM Entity\Ticket t LEFT JOIN t.reservacion r LEFT JOIN r.equipo e WHERE r.fecha_solicitada = ?1 AND r.estatus = 'pendiente' AND e.handicap_promedio between ?2 AND ?3");
 			$qb->setParameter(1, date('Y-m-d\Th:i:s', $hora));
 			$qb->setParameter(2,$handicap[$i][0]);
 			$qb->setParameter(3,$handicap[$i][1]);
@@ -491,7 +456,7 @@ class AsignacionesManager extends BaseManager
 				$offset = rand(1,$array[0][1])-1;
 				//echo "\n";
 
-				$qb = self::$EntityManager->createQuery('SELECT t FROM Entity\Ticket t LEFT JOIN t.reservacion r LEFT JOIN r.equipo e WHERE r.fecha_solicitada = ?1 AND e.handicap_promedio between ?2 AND ?3');
+				$qb = self::$EntityManager->createQuery("SELECT t FROM Entity\Ticket t LEFT JOIN t.reservacion r LEFT JOIN r.equipo e WHERE r.fecha_solicitada = ?1 AND r.estatus = 'pendiente' AND e.handicap_promedio between ?2 AND ?3");
 				$qb->setParameter(1, date('Y-m-d\Th:i:s', $hora));
 				$qb->setParameter(2,$handicap[$i][0]);
 				$qb->setParameter(3,$handicap[$i][1]);
@@ -506,7 +471,7 @@ class AsignacionesManager extends BaseManager
 				$notFound =false;
 				self::eraseTickets($ticketSelected->getReservacion()->getId());
 
-				return $ticketSelected->getReservacion()->getEquipo()->getId();
+				return $ticketSelected->getReservacion();//$ticketSelected->getReservacion()->getEquipo()->getId();
 
 				break;
 			}/*else{
@@ -533,6 +498,15 @@ class AsignacionesManager extends BaseManager
 			self::$EntityManager->flush();
 			echo "Borrado: ".$ticket->getId();
 		}
+	}
+
+	public function wrapAsignacionFromSorteo($hoyo, $hora, $equipo){
+		if ($equipo != 0) {
+			return array('horario' => $hora, 'hoyo' => $hoyo, 'reservacion' => $equipo);
+		}else{
+			return null;
+		}
+		
 	}
 }
 
