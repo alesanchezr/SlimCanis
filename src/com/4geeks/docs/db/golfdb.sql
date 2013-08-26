@@ -29,13 +29,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`user` (
   `updatedate` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `username_UNIQUE` (`username` ASC),
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC),
-  INDEX `fk_user_1_idx` (`role_id` ASC),
-  CONSTRAINT `fk_user_role`
-    FOREIGN KEY (`role_id`)
-    REFERENCES `mydb`.`role` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC))
 ENGINE = InnoDB;
 
 
@@ -54,13 +48,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`socio` (
   `updatedate` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `cedula_UNIQUE` (`cedula` ASC),
-  UNIQUE INDEX `numero_socio_UNIQUE` (`numero_socio` ASC),
-  INDEX `fk_socio_user_idx` (`user_id` ASC),
-  CONSTRAINT `fk_socio_user`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  UNIQUE INDEX `numero_socio_UNIQUE` (`numero_socio` ASC))
 ENGINE = InnoDB;
 
 
@@ -73,13 +61,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`equipo` (
   `handicap_promedio` SMALLINT NOT NULL,
   `createdate` TIMESTAMP NOT NULL DEFAULT '2009-03-10 01:01:01',
   `updatedate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  INDEX `fk_equipo_socio_idx` (`socio_id` ASC),
-  CONSTRAINT `fk_equipo_socio`
-    FOREIGN KEY (`socio_id`)
-    REFERENCES `mydb`.`socio` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -109,25 +91,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`integrante` (
   `equipo_id` INT NOT NULL,
   `socio_id` INT NULL,
   `invitado_id` INT NULL,
-  INDEX `fk_integrantes_equipo_idx` (`equipo_id` ASC),
-  INDEX `fk_integrantes_socio_idx` (`socio_id` ASC),
-  INDEX `fk_integrantes_invitado_idx` (`invitado_id` ASC),
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_integrantes_equipo`
-    FOREIGN KEY (`equipo_id`)
-    REFERENCES `mydb`.`equipo` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_integrantes_socio`
-    FOREIGN KEY (`socio_id`)
-    REFERENCES `mydb`.`socio` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_integrantes_invitado`
-    FOREIGN KEY (`invitado_id`)
-    REFERENCES `mydb`.`invitado` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -154,25 +118,15 @@ CREATE TABLE IF NOT EXISTS `mydb`.`reservacion` (
   `socio_id` INT NOT NULL,
   `equipo_id` INT NOT NULL,
   `fecha_solicitada` DATETIME NOT NULL,
+  `prioridad` INT NULL,
   `estatus` VARCHAR(25) NOT NULL,
   `editado_por` VARCHAR(45) NULL,
   `createdate` TIMESTAMP NOT NULL DEFAULT '2009-03-10 01:01:01',
   `updatedate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  INDEX `fk_reservacion_socio_idx` (`socio_id` ASC),
-  INDEX `fk_reservacion_equipo_idx` (`equipo_id` ASC),
   INDEX `index_estatus` (`estatus` ASC),
   INDEX `index_fecha_solicitada` (`fecha_solicitada` ASC),
-  CONSTRAINT `fk_reservacion_socio`
-    FOREIGN KEY (`socio_id`)
-    REFERENCES `mydb`.`socio` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_reservacion_equipo`
-    FOREIGN KEY (`equipo_id`)
-    REFERENCES `mydb`.`equipo` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  INDEX `index_prioridad` (`prioridad` ASC))
 ENGINE = InnoDB;
 
 
@@ -210,31 +164,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`asignacion` (
   `updatedate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `reservacion_id_UNIQUE` (`reservacion_id` ASC),
-  INDEX `fk_asignacion_cadi_idx` (`cadi_id` ASC),
-  INDEX `fk_asignacion_equipo_idx` (`equipo_id` ASC),
-  INDEX `fk_asignacion_socio_idx` (`socio_id` ASC),
   INDEX `index_fecha_asignada` (`fecha_asignada` ASC),
-  INDEX `index_estatus` (`estatus` ASC),
-  CONSTRAINT `fk_asignacion_reservacion`
-    FOREIGN KEY (`reservacion_id`)
-    REFERENCES `mydb`.`reservacion` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_asignacion_cadi`
-    FOREIGN KEY (`cadi_id`)
-    REFERENCES `mydb`.`cadi` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_asignacion_equipo`
-    FOREIGN KEY (`equipo_id`)
-    REFERENCES `mydb`.`equipo` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_asignacion_socio`
-    FOREIGN KEY (`socio_id`)
-    REFERENCES `mydb`.`socio` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  INDEX `index_estatus` (`estatus` ASC))
 ENGINE = InnoDB;
 
 
@@ -243,19 +174,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`invitacion` (
   `invitado_id` INT NOT NULL,
-  `asignacion_id` INT NOT NULL,
-  INDEX `fk_invitaciones_invitado_idx` (`invitado_id` ASC),
-  INDEX `fk_invitaciones_asignacion_idx` (`asignacion_id` ASC),
-  CONSTRAINT `fk_invitaciones_invitado`
-    FOREIGN KEY (`invitado_id`)
-    REFERENCES `mydb`.`invitado` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_invitaciones_asignacion`
-    FOREIGN KEY (`asignacion_id`)
-    REFERENCES `mydb`.`asignacion` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  `asignacion_id` INT NOT NULL)
 ENGINE = InnoDB;
 
 
@@ -265,13 +184,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `mydb`.`ticket` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `reservacion_id` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_ticket_reservacion_idx` (`reservacion_id` ASC),
-  CONSTRAINT `fk_ticket_reservacion`
-    FOREIGN KEY (`reservacion_id`)
-    REFERENCES `mydb`.`reservacion` (`estatus`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
