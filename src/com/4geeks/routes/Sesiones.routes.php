@@ -21,7 +21,16 @@ $app->post("/sesiones/iniciar", function () use ($app) {
         }
 
         $_SESSION['user'] = new CanisUser(1,$data->username);
-        $app->render(200,Utils::renderResult("Se ha iniciado sesion"));
+        $app->render(200,Utils::renderResult(array(
+            array(
+                "usuario" => array(
+                    "id" => $_SESSION['user']->id,
+                    "username" => $_SESSION['user']->name,
+                    "role_id" => $_SESSION['user']->roleId
+                ),
+                "url" => "reservar"
+            )
+        )));
     }
     catch (ErrorException $e)
     {
