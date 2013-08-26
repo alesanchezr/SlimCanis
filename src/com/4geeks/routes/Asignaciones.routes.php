@@ -256,7 +256,7 @@
 				array_push($result, $asig);
 			}
 
-			//print_r($equipos);
+			//print_r($result);
 			//$app->render(200,Utils::renderResult(equiposParser($equipos)));
 			AsignacionesManager::$EntityManager->flush();
 			$app->render(200,Utils::renderResult($result));

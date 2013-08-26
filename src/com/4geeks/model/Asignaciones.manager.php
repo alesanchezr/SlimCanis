@@ -122,6 +122,11 @@ class AsignacionesManager extends BaseManager
     public  function generarAsignaciones($data)
 	{
 		$asignaciones = self::sorteo($data);
+		
+		//print_r($asignaciones);
+
+		//die("Voy a asignar");
+
 		$result = array();
 		foreach ($asignaciones as $key => $asignacion) {
 			$newAsignacion = new Asignacion();
@@ -134,6 +139,8 @@ class AsignacionesManager extends BaseManager
 
 			self::$EntityManager->persist($newAsignacion);
 			array_push($result, $newAsignacion);
+
+			//echo "\n Agregado: ".$asignacion["horario"];
 		}
 
 		return $result;
@@ -342,13 +349,14 @@ class AsignacionesManager extends BaseManager
 				$baseEndHoyos = $baseInit+7800; //8:40
 				$hoyos = 1;
 				if ($temp <= $baseEndHoyos) {
-					echo "\n".date('Y-m-d\Th:i:s', $temp)." menor a 8:40 \n";
+					//echo "\n".date('Y-m-d\Th:i:s', $temp)." menor a 8:40 \n";
 					$hoyos = 2;
 				}
 
 				for ($j=0; $j < $hoyos; $j++) { 
 					$ss = self::getSorteoParaHora($temp, $seleccionados);
-					if ($ss >0) {
+					//if ($ss >0) {
+					if ($ss != null) {
 						array_push($result, self::wrapAsignacionFromSorteo($j,date("Y-m-d\Th:i:s",$temp),$ss));//array("hoyo ".$j." ".date("Y-m-d\Th:i:s",$temp) => $ss));
 						//array_push($seleccionados, $ss);
 					}
@@ -363,7 +371,8 @@ class AsignacionesManager extends BaseManager
 				//array_push($result, array("".date("Y-m-d\Th:i:s",$temp) => self::getSorteoParaHora($temp)));
 				//echo "\n";
 				$ss = self::getSorteoParaHora($temp, $seleccionados);
-				if ($ss >0) {
+				//if ($ss >0) {
+				if ($ss != null) {
 					array_push($result, self::wrapAsignacionFromSorteo(1,date("Y-m-d\Th:i:s",$temp),$ss));//array("hoyo 0 ".date("Y-m-d\Th:i:s",$temp) => $ss));
 					//array_push($seleccionados, $ss);
 				}
@@ -381,7 +390,8 @@ class AsignacionesManager extends BaseManager
 
 				for ($j=0; $j < $hoyos; $j++) { 
 					$ss = self::getSorteoParaHora($temp, $seleccionados);
-					if ($ss >0) {
+					//if ($ss >0) {
+					if ($ss != null) {
 						array_push($result, self::wrapAsignacionFromSorteo($j,date("Y-m-d\Th:i:s",$temp),$ss));//array("hoyo ".$j." ".date("Y-m-d\Th:i:s",$temp) => $ss));
 						//array_push($seleccionados, $ss);
 					}
@@ -390,9 +400,9 @@ class AsignacionesManager extends BaseManager
 			}	
 		}
 
-		print_r($result);
+		//print_r($result);
 
-		//return $array;
+		return $result;
 	}
 
 	public function getSorteoParaHora($hora,$seleccionados){
@@ -437,6 +447,7 @@ class AsignacionesManager extends BaseManager
 					//echo "Equipo seleccionado para el salir (".date("Y-m-d\Th:i:s",$hora)." - handicap ".$handicap[$i][0]."-".$handicap[$i][1]."): ".$ticketSelected->getReservacion()->getEquipo()->getId();	
 				}
 				$notFound =false;
+
 				self::eraseTickets($ticketSelected->getReservacion()->getId());
 
 				return $ticketSelected->getReservacion();//$ticketSelected->getReservacion()->getEquipo()->getId();
@@ -448,7 +459,7 @@ class AsignacionesManager extends BaseManager
 
 			}*/
 		}
-		if ($notFound) return 0;
+		if ($notFound) return null;
 		
 	}
 
@@ -458,7 +469,7 @@ class AsignacionesManager extends BaseManager
 		$qb->setParameter(1, $reservacionId);
 
 		$array2 = $qb->getResult();
-		echo "\n Array de Tickets\n";
+		//echo "\n Array de Tickets\n";
 		//print_r($array2);
 
 		foreach ($array2 as $key => $ticket) {
@@ -469,7 +480,7 @@ class AsignacionesManager extends BaseManager
 	}
 
 	public function wrapAsignacionFromSorteo($hoyo, $hora, $equipo){
-		if ($equipo != 0) {
+		if ($equipo != null) {
 			return array('horario' => $hora, 'hoyo' => $hoyo, 'reservacion' => $equipo);
 		}else{
 			return null;
