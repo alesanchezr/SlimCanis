@@ -45,7 +45,7 @@ $app->get("/sesiones/cerrar", function () use ($app) {
    {
        unset($_SESSION['user']);
        $app->view()->setData('user', null);
-       $app->render(200,Utils::renderResult("La sesion se ha eliminado."));
+       $app->render(200,Utils::renderResult(array("La sesion se ha eliminado."));
     }
     catch (ErrorException $e)
     {
@@ -79,15 +79,7 @@ $app->get("/sesiones/me", $authenticate($app), function () use ($app) {
         
     }
     catch (ErrorException $e) {
-        
-        $result = array(
-                    "success"  => false, 
-                    "response" => array(
-                        "message" => $e->getMessage()
-                        )
-                );
-        
-        $app->render(200,Utils::renderFault($result));
+        $app->render(200,Utils::renderFault($e->getMessage()));
     }
 
 });

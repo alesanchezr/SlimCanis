@@ -59,12 +59,12 @@
 			if(count($reservaciones)>0)
 			{
 				$rsvp = $reservaciones[0];
-				$rsvp_array = array(
+				$rsvp_array = array( array(
 					"id" => $rsvp->getId(),
 					"estatus" => $rsvp->getEstatus(),
 					"equipo" => $rsvp->getEquipo()->toArray(),
 					"fechas_solicitadas" => $fechas
-					);
+					));
 
 		    	EquiposManager::$EntityManager->flush();
 		    	$app->render(200,Utils::renderResult($rsvp_array));
@@ -102,7 +102,7 @@
 			$reservacion = $reservacionesManager->cambiarStatus($data);
 
 			EquiposManager::$EntityManager->flush();
-		    $app->render(200,Utils::renderResult($reservacion->toArrayMin()));
+		    $app->render(200,Utils::renderResult(array($reservacion->toArrayMin()));
 		}
 		catch (ErrorException $e)
 		{
