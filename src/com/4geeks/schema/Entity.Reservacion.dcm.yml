@@ -38,8 +38,8 @@ Entity\Reservacion:
         asignacion:
             targetEntity: Asignacion
             joinColumn:
-                name: reservacion_id
-                referencedColumnName: id
+                name: id
+                referencedColumnName: reservacion_id
                 nullable: false
     oneToMany:
         tickets:

@@ -11,6 +11,8 @@ class EquiposManager extends BaseManager
 
     public  function crearEquipo($data)
 	{
+
+		$array_data = (array) $data;
 		//DATA
 		/*
 		{  
@@ -32,7 +34,7 @@ class EquiposManager extends BaseManager
 		}
 		*/
 		
-		$socio = self::$EntityManager->find("Entity\Socio",$data->socio_id);
+		$socio = self::$EntityManager->find("Entity\Socio",$array_data["socio_id"]);
 
 		$handicapFinal = $socio->getHandicap();
 		$integrantesFinales = array();
@@ -41,7 +43,7 @@ class EquiposManager extends BaseManager
 		$equipo->setSocio($socio);
 		self::$EntityManager->persist($equipo);
 
-		foreach ($data->integrantes as $int) {
+		foreach ($array_data["integrantes"] as $int) {
 			
 			$golfista = null;
 			$integrante = new Integrante();
