@@ -55,6 +55,17 @@ class ReservacionesManager extends BaseManager
 		}
 	}
 
+	public function cambiarStatus($data)
+	{
+		$array_data = (array) $data;
+
+		$reservacion = self::$EntityManager->find("Entity\Reservacion",$array_data['id']);
+		$reservacion->setEstatus($array_data["estatus"]);
+		self::$EntityManager->persist($reservacion);
+
+		return $reservacion;
+	}
+
     public  function listarPorFecha($data)
 	{
 

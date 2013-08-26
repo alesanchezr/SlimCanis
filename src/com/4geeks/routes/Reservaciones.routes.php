@@ -65,7 +65,7 @@
 					"equipo" => $rsvp->getEquipo()->toArray(),
 					"fechas_solicitadas" => $fechas
 					);
-				
+
 		    	EquiposManager::$EntityManager->flush();
 		    	$app->render(200,Utils::renderResult($rsvp_array));
 			}
@@ -89,6 +89,26 @@
 		$result = $reservacionesManager->listarPorFecha($data);
 
 	    $app->render(200,$result);
+
+	});
+
+	// POST route
+	$app->post('/reservaciones/cambiar_estatus', function() use ($app){
+
+		try
+		{
+			$data = json_decode($app->request()->getBody());
+
+			$reservacionesManager = new ReservacionesManager();
+			$reservacion = $reservacionesManager->cambiarStatus($data);
+
+			EquiposManager::$EntityManager->flush();
+		    $app->render(200,Utils::renderResult($reservacion->toArrayMin()));
+		}
+		catch (ErrorException $e)
+		{
+			$app->render(200,Utils::renderFault($e->getMessage()));
+		}
 
 	});
 

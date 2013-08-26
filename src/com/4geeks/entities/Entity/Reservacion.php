@@ -387,4 +387,37 @@ class Reservacion
     {
         return $this->equipo;
     }
+
+    public function toArrayMin()
+    {
+        $equipo = $this->getEquipo();
+        if($equipo) $equipo = $equipo->toArray();
+
+        //$asignacion = $this->getAsignacion();
+        //if($asignacion) $asignacion = $asignacion->toArray();
+
+        return array(
+            "id" => $this->id, 
+            "fecha" => $this->fecha_solicitada, 
+            "estatus" => $this->estatus,
+            "equipo" => $equipo
+            );
+    }
+
+    public function toArrayParaAsignacion()
+    {
+        $equipo = $this->getEquipo();
+        if($equipo) $equipo = $equipo->toArray();
+
+        $asignacion = $this->getAsignacion();
+        if($asignacion) $asignacion = $asignacion->toArrayMin();
+
+        return array(
+            "id" => $this->id, 
+            "fecha" => $this->fecha_solicitada, 
+            "estatus" => $this->estatus,
+            "equipo" => $equipo,
+            "asignacion" => $asignacion
+            );
+    }
 }
