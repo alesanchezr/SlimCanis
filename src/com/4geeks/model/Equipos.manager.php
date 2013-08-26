@@ -12,75 +12,67 @@ class EquiposManager extends BaseManager
 	{
 		//DATA
 		/*
-		{ 
-		        "perfil_id": 1, 
-		        "integrantes": [
-		            {
-		                "id": 1,
-		                "nombre": "Antonio Pérez",
-		                "usuario_id":1,
-		                "numero_socio":1111,
-		                "handicap":12,
-		                "socio":"NULL"
-		            },
-		            {
-		                "id": 2,
-		                "nombre": "Antonio Pérez",
-		                "usuario_id":2,
-		                "numero_socio":2222,
-		                "handicap":10,
-		                "socio":"NULL"
-		            },
-		            {
-		                "id": 3,
-		                "nombre": "Antonio Pérez",
-		                "usuario_id":"NULL",
-		                "numero_socio":"NULL",
-		                "handicap":25,
-		                "socio":1111
-		            }
-		        ] 
+		{  
+		    "socio_id": 1 ,
+		    "integrantes": [
+		        {
+		            "id": 2,
+		            "tipo": "socio"
+		        },
+		        {
+		            "id": 3,
+		            "tipo": "socio"
+		        },
+		        {
+		            "id": 1,
+		            "tipo": "invitado"
+		        }
+		    ]
 		}
 		*/
-		require_once "src/com/4geeks/entities/Entity/Socio.php";
-		$socio = self::$EntityManager->find("Socio",$data->golfista_id);
+		
+		$socio = self::$EntityManager->find("Entity\Socio",$data->socio_id);
 
-		require_once "src/com/4geeks/entities/Entity/Equipo.php";
-
-		$handicap = $socio->getHandicap();
-
+		$handicapFinal = $socio->getHandicap();
+		$integrantesFinales = array();
 		$count = 1;
+		$equipo = new Equipo();
+		$equipo->setSocio($socio);
+		self::$EntityManager->persist($equipo);
 
-		foreach ($data->integrantes as $key => $value) {
-			$handicap += $value->handicap;
-			//$s = self::$EntityManager->find("Golfista",$data->perfil_id);
+		foreach ($data->integrantes as $int) {
+			
+			$golfista = null;
+			$integrante = new Integrante();
+			$integrante->setEquipo($equipo);
+
+			if($int->tipo=="socio")
+			{
+				$golfista = self::$EntityManager->find("Entity\Socio",$int->id);
+				$integrante->setSocio($golfista);
+			}
+			else if($int->tipo=="invitado")
+			{
+				$golfista = self::$EntityManager->find("Entity\Invitado",$int->id);
+				$integrante->setInvitado($golfista);
+			}
+			
+			if($golfista)
+			{
+				$handicapFinal += $golfista->getHandicap();
+				self::$EntityManager->persist($integrante);
+				$equipo->addIntegrante($integrante);
+			}
+
 			$count++;
 		}
 
-		//TODO: load integrantes
-
-		$handicap = intval(round($handicap/$count));
-
-		$equipo = new Equipos();
-		$equipo->setHandicap($handicap);
-		$equipo->setSocio($socio);
+		$handicap = intval(round($handicapFinal/$count));
+		
+		$equipo->setHandicapPromedio($handicap);
 		self::$EntityManager->persist($equipo);
-		self::$EntityManager->flush();
 
-		$result = array(
-				    "success"  => true, 
-				    "response" => array( 
-				        "id"   => $equipo->getId(),
-				        "perfil_id" => $equipo->getSocio()->getId(), 
-				        "handicap_promedio" => $equipo->getHandicap(),
-				        "integrantes" => array(
-				        	array("perfil_id" => 2222),
-				        	array("perfil_id" => 3333)
-				        )
-				    )
-				);
-
-		return $result;
+		return $equipo;
 	}
 
 	public function getEquipos()

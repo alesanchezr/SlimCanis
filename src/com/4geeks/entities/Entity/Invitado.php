@@ -337,4 +337,15 @@ class Invitado
     {
         return $this->asignacions;
     }
+
+    public function toArrayMin()
+    {
+        return array(
+                "id" => $this->id,
+                "nombre" => $this->nombre,
+                //"numero_socio" => $this->numero_socio,
+                "handicap" => $this->handicap
+            );
+    }
+
 }
