@@ -45,7 +45,7 @@ $app->get("/sesiones/cerrar", function () use ($app) {
    {
        unset($_SESSION['user']);
        $app->view()->setData('user', null);
-       $app->render(200,Utils::renderResult(array("La sesion se ha eliminado."));
+       $app->render(200,Utils::renderResult(array("La sesion se ha eliminado.")));
     }
     catch (ErrorException $e)
     {
