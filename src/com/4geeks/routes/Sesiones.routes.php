@@ -7,32 +7,41 @@ $app->post("/sesiones/iniciar", function () use ($app) {
     
     $data = json_decode($app->request()->getBody());
 
-    $errors = array();
+    try
+    {
+        $errors = array();
+        if ($data->username != "123456") {
+            $errors['username'] = "Username is not found.";
+        } else if ($data->password != "88ea39439e74fa27c09a4fc0bc8ebe6d00978392") {
+            $errors['password'] = "Password does not match.";
+        }
 
-    if ($data->username != "123456") {
-        $errors['username'] = "Username is not found.";
-    } else if ($data->password != "88ea39439e74fa27c09a4fc0bc8ebe6d00978392") {
-        $errors['password'] = "Password does not match.";
+        if (count($errors) > 0) {
+            throw new ErrorException("Error iniciando sesion.", 1);
+        }
+
+        $_SESSION['user'] = new CanisUser(1,$data->username);
+        $app->render(200,Utils::renderResult("Se ha iniciado sesion"));
     }
-
-    if (count($errors) > 0) {
-        $app->render(404,$errors);
+    catch (ErrorException $e)
+    {
+        $app->render(200,Utils::renderFault($e->getMessage()));
     }
-
-    $_SESSION['user'] = new CanisUser(1,$data->username);
-    $app->render(200,array(
-            'msg' => "Se ha iniciado sesion",
-        ));
 });
 
 //GET
 $app->get("/sesiones/cerrar", function () use ($app) {
    
-   unset($_SESSION['user']);
-   $app->view()->setData('user', null);
-   $app->render(200,array(
-            'msg' => "Le sesion se ha eliminado",
-        ));
+   try
+   {
+       unset($_SESSION['user']);
+       $app->view()->setData('user', null);
+       $app->render(200,Utils::renderResult("La sesion se ha eliminado."));
+    }
+    catch (ErrorException $e)
+    {
+        $app->render(200,Utils::renderFault($e->getMessage()));
+    }
 
 });
 
