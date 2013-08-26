@@ -75,13 +75,20 @@ class ReservacionesManager extends BaseManager
 
     public  function getReservacionesSemana($numero_socio)
 	{
-		$qb = self::$EntityManager->createQueryBuilder();
-		$qb->select('s')
-		   ->from('Entity\Reservacion', 'r');
-		   //->where('')
-		   //->setParameter("inicio",$inicio)
-		   //->setParameter("fin",$fin);
-		$array = $qb->getQuery()->getResult(2);
+		$start = date("YYYY-mm-dd h:i:s", strtotime( "previous monday" ));
+		$end = date("YYYY-mm-dd h:i:s", strtotime( "next friday" ));
+
+		//$qb = self::$EntityManager->createQuery('SELECT r FROM Reservacion JOIN r.equipo e JOIN e.integrantes i WHERE i.')
+		$qb = self::$EntityManager->createQueryBuilder() 
+		   ->select('r')
+		   ->from('Entity\Reservacion', 'r')
+		   ->where('r.estatus <> :status')
+		   //->andWhere("r.equipo between :fecha1 and :fecha2")
+		   ->andWhere("r.fecha_solicitada between :fecha1 and :fecha2")
+		   ->setParameter("status","negada")
+		   ->setParameter("fecha1",$start)
+		   ->setParameter("fecha2",$end);
+		$array = $qb->getQuery()->getResult(1);
 
 		return $array;
 	}
