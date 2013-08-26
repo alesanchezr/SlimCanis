@@ -16,6 +16,7 @@ class CanisUser
 		$this->locationId = $locationId;
 		$this->name       = $name;
 		$this->status     = 'invalid';
+		$this->roleId   = -1;
 	}
 
 	public function isValid()
