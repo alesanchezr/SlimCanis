@@ -43,13 +43,40 @@
 		    "horas_solicitadas": [ "06:30:00", "08:50:00", "08:00:00", "07:40:00", "08:10:00", "10:00:00", "09:20:00", "09:40:00" ] 
 		}
 		*/
+		try
+		{
 
-		$data = json_decode($app->request()->getBody());
+			$data = json_decode($app->request()->getBody());
 
-		$reservacionesManager = new ReservacionesManager();
-		$result = $reservacionesManager->reserva($data);
+			$reservacionesManager = new ReservacionesManager();
+			$reservaciones = $reservacionesManager->reserva($data);
+			$fechas = array();
+			foreach($reservaciones as $rsvp)
+			{
+				array_push($fechas,$rsvp->getFechaSolicitada());
+			}
 
-	    $app->render(200,$result);
+			if(count($reservaciones)>0)
+			{
+				$rsvp = $reservaciones[0];
+				$rsvp_array = array(
+					"id" => $rsvp->getId(),
+					"estatus" => $rsvp->getEstatus(),
+					"equipo" => $rsvp->getEquipo()->toArray(),
+					"fechas_solicitadas" => $fechas
+					);
+				
+		    	EquiposManager::$EntityManager->flush();
+		    	$app->render(200,Utils::renderResult($rsvp_array));
+			}
+
+			$app->render(200,Utils::renderFault("No hay reservaciones."));
+			
+		}
+		catch (ErrorException $e)
+		{
+			$app->render(200,Utils::renderFault($e->getMessage()));
+		}
 
 	});
 

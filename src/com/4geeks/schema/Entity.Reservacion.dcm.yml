@@ -11,6 +11,8 @@ Entity\Reservacion:
             columns: [estatus]
         index_fecha_solicitada:
             columns: [fecha_solicitada]
+        index_prioridad:
+            columns: [prioridad]
     id:
         id:
             type: integer
@@ -23,6 +25,9 @@ Entity\Reservacion:
             type: integer
         fecha_solicitada:
 
+        prioridad:
+            type: integer
+            nullable: true
         estatus:
             type: string
             length: 25
@@ -38,8 +43,8 @@ Entity\Reservacion:
         asignacion:
             targetEntity: Asignacion
             joinColumn:
-                name: reservacion_id
-                referencedColumnName: id
+                name: id
+                referencedColumnName: reservacion_id
                 nullable: false
     oneToMany:
         tickets:
@@ -47,7 +52,7 @@ Entity\Reservacion:
             mappedBy: reservacion
             joinColumn:
                 name: reservacion_id
-                referencedColumnName: estatus
+                referencedColumnName: id
                 nullable: false
     manyToOne:
         socio:

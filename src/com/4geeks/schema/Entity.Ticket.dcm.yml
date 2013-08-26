@@ -12,13 +12,12 @@ Entity\Ticket:
                 strategy: AUTO
     fields:
         reservacion_id:
-            type: string
-            length: 45
+            type: integer
     manyToOne:
         reservacion:
             targetEntity: Reservacion
             inversedBy: tickets
             joinColumn:
                 name: reservacion_id
-                referencedColumnName: estatus
+                referencedColumnName: id
                 nullable: false

@@ -75,7 +75,7 @@ class Reservacion
      *
      * @ORM\OneToOne(targetEntity="Entity\Asignacion")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="reservacion_id", referencedColumnName="id", unique=true, nullable=false)
+     *   @ORM\JoinColumn(name="id", referencedColumnName="reservacion_id", unique=true, nullable=false)
      * })
      */
     private $asignacion;

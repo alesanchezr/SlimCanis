@@ -33,7 +33,7 @@ class Ticket
      *
      * @ORM\ManyToOne(targetEntity="Entity\Reservacion", inversedBy="tickets")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="reservacion_id", referencedColumnName="estatus", nullable=false)
+     *   @ORM\JoinColumn(name="reservacion_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $reservacion;

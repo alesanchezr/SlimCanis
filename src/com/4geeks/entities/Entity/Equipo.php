@@ -314,4 +314,19 @@ class Equipo
         return $this->socio;
     }
 
+    public function toArray()
+    {
+        $integrantes = array();
+        foreach ($this->integrantes as $int) {
+            array_push($integrantes, $int->toArrayMin());
+        }
+
+        return array(
+                "id" => $this->id,
+                "socio" => $this->socio->toArrayMin(),
+                "handicap_promedio" => $this->handicap_promedio,
+                "integrantes" => $integrantes
+            );
+    }
+
 }
