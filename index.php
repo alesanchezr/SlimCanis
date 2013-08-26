@@ -22,6 +22,7 @@ require_once "slim-bootstrap.php";
 require_once "src/com/4geeks/routes/Sesiones.routes.php";
 require_once "src/com/4geeks/routes/Base.routes.php";
 require_once "src/com/4geeks/utils/Utils.class.php";
+require_once "src/com/4geeks/utils/CanisUser.class.php";
 
 require_once "src/com/4geeks/model/Base.manager.php";
 BaseManager::$EntityManager = $entityManager;

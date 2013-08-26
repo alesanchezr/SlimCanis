@@ -52,14 +52,14 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="createdate", type="string")
+     * @ORM\Column(name="createdate", type="string", nullable=true)
      */
     private $createdate;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="updatedate", type="string")
+     * @ORM\Column(name="updatedate", type="string", nullable=true)
      */
     private $updatedate;
 

@@ -24,13 +24,14 @@ class UsuariosManager extends BaseManager
 		$qb = self::$EntityManager->createQueryBuilder();
 		$qb->select('e')
 		   ->from('Entity\user', 'e')
-		   ->where('e.email = ?1')
-		   ->setParameter(1, $data->email);
+		   ->where('e.email = ?1 OR e.username = ?2')
+		   ->setParameter(1, $data->email)
+		   ->setParameter(2, $data->username);
 
 		$array = $qb->getQuery()->getArrayResult();
 
    		if (count($array)>0) {
-   			throw new Exception("Email already in use", 1);
+   			throw new Exception("User already exists.", 1);
    		
    		}else{
 

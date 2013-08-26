@@ -1,9 +1,10 @@
 <?php
 
-require_once("vendor/symfony/console/Symfony/Component/Console/Helper/HelperSet.php");
-require_once("vendor/doctrine/dbal/lib/Doctrine/DBAL/Tools/Console/Helper/ConnectionHelper.php");
-require_once("vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Helper/EntityManagerHelper.php");
-require_once("vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/YamlDriver.php");
+//require_once("vendor/symfony/console/Symfony/Component/Console/Helper/HelperSet.php");
+//require_once("vendor/symfony/console/Symfony/Component/Console/Helper/Helper.php");
+//require_once("vendor/doctrine/dbal/lib/Doctrine/DBAL/Tools/Console/Helper/ConnectionHelper.php");
+//require_once("vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Helper/EntityManagerHelper.php");
+//require_once("vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/YamlDriver.php");
 //Doctrine\ORM\Tools\Console\ConsoleRunner;
 
 // cli-config.php

@@ -15,6 +15,15 @@ class Integrante
     /**
      * @var integer
      *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="equipo_id", type="integer")
      */
     private $equipo_id;
@@ -63,6 +72,16 @@ class Integrante
      */
     private $invitado;
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set equipo_id
@@ -200,5 +219,31 @@ class Integrante
     public function getInvitado()
     {
         return $this->invitado;
+    }
+
+    public function toArrayMin()
+    {
+        $integrante = $this->getSocio();
+        if(!$integrante)
+        {
+            $integrante = $this->getInvitado();
+            if(!$integrante)
+                return null;
+            
+            return array(
+                    "id" => $integrante->getId(),
+                    "nombre" => $integrante->getNombre(),
+                    "handicap" => $integrante->getHandicap()
+                );
+        }
+        else
+        {
+            return array(
+                    "id" => $integrante->getId(),
+                    "nombre" => $integrante->getNombre(),
+                    "numero_socio" => $integrante->getNumeroSocio(),
+                    "handicap" => $integrante->getHandicap()
+                );
+        }           
     }
 }

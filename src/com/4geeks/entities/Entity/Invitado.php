@@ -59,14 +59,14 @@ class Invitado
     /**
      * @var string
      *
-     * @ORM\Column(name="createdate", type="string")
+     * @ORM\Column(name="createdate", type="string", nullable=true)
      */
     private $createdate;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="updatedate", type="string")
+     * @ORM\Column(name="updatedate", type="string", nullable=true)
      */
     private $updatedate;
 
@@ -337,4 +337,15 @@ class Invitado
     {
         return $this->asignacions;
     }
+
+    public function toArrayMin()
+    {
+        return array(
+                "id" => $this->id,
+                "nombre" => $this->nombre,
+                //"numero_socio" => $this->numero_socio,
+                "handicap" => $this->handicap
+            );
+    }
+
 }
