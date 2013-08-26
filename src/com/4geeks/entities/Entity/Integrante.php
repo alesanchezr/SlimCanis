@@ -220,4 +220,30 @@ class Integrante
     {
         return $this->invitado;
     }
+
+    public function toArrayMin()
+    {
+        $integrante = $this->getSocio();
+        if(!$integrante)
+        {
+            $integrante = $this->getInvitado();
+            if(!$integrante)
+                return null;
+            
+            return array(
+                    "id" => $integrante->getId(),
+                    "nombre" => $integrante->getNombre(),
+                    "handicap" => $integrante->getHandicap()
+                );
+        }
+        else
+        {
+            return array(
+                    "id" => $integrante->getId(),
+                    "nombre" => $integrante->getNombre(),
+                    "numero_socio" => $integrante->getNumeroSocio(),
+                    "handicap" => $integrante->getHandicap()
+                );
+        }           
+    }
 }

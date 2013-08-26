@@ -17,7 +17,7 @@ $app->post("/sesiones/iniciar", function () use ($app) {
         $app->render(404,$errors);
     }
 
-    $_SESSION['user'] = $data->username;
+    $_SESSION['user'] = new CanisUser(1,$data->username);
     $app->render(200,array(
             'msg' => "Se ha iniciado sesion",
         ));

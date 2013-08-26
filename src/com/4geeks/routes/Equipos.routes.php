@@ -31,14 +31,47 @@
 
 	});
 		// POST route
-	$app->post('/equipos', $authenticate($app), function() use ($app){
+	$app->post('/equipos', function() use ($app){
 
 		$data = json_decode($app->request()->getBody());
 
-		$equiposManager = new EquiposManager();
-		$result = $equiposManager->crearEquipo($data);
+		try
+		{
+			$equiposManager = new EquiposManager();
+			$equipo = $equiposManager->crearEquipo($data);
+			$integrantes = $equipo->getIntegrantes();
+			
+			$arrayIntegrantes = array();
+			foreach ($integrantes as $int) {
+				array_push($arrayIntegrantes, $int->toArrayMin());
+			}
 
-	    $app->render(200,$result);
+			$result = array(
+					    "success"  => true, 
+					    "response" => array( 
+					        "id"   => $equipo->getId(),
+					        "socio" => $equipo->getSocio()->toArrayMin(), 
+					        "handicap_promedio" => $equipo->getHandicapPromedio(),
+					        "integrantes" => $arrayIntegrantes
+					    )
+					);
+
+			EquiposManager::$EntityManager->flush();
+	    	$app->render(200,$result);
+		} 
+		catch (ErrorException $e) {
+			
+			$result = array(
+					    "success"  => false, 
+					    "response" => array(
+					    	"message" => $e->getMessage()
+					    	)
+					);
+			
+			$app->render(200,$result);
+		}
+
+
 
 	});
 
