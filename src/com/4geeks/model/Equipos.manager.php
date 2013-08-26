@@ -4,6 +4,7 @@ use Entity\Equipo;
 use Entity\Integrante;
 
 require_once "src/com/4geeks/model/Base.manager.php";
+require_once 'src/com/4geeks/model/Fechas.manager.php';
 
 class EquiposManager extends BaseManager
 {
@@ -77,58 +78,41 @@ class EquiposManager extends BaseManager
 
 	public function getEquipos()
 	{
-		
-		/*$qb = self::$EntityManager->createQueryBuilder();
-		$qb->select('s, g')
-		   ->from('Entity\Equipo', 's')
-		   ->leftJoin("s.integrante", 'g');*/
 		$qb = self::$EntityManager->createQuery('SELECT e, g, s FROM Entity\Equipo e JOIN e.integrantes g JOIN e.socio s');
-		//$array = $qb->getQuery()->getResult(2);
-		$array = $qb->getResult(2);
+		$array = $qb->getResult();
 		if (count($array)>0) {
 			return $array;
 		}else{
-			throw new Exception("No found.", 1);
+			throw new ErrorException("No found.", 1);
 			
 		}
-		//require_once "src/com/4geeks/entities/Entity/Equipo.php";
-
-		/*$qb = self::$EntityManager->createQueryBuilder();
-		$qb->select('e')
-		   ->from('equipos', 'e')
-		   ->where('e.golfista_id = ?1')
-		   ->setParameter(1, $id);*/
-		//$query = self::$EntityManager->createQuery('SELECT e, g, g2 FROM Equipos e LEFT JOIN e.golfista_id g LEFT JOIN e.golfistas_id g2 WHERE e.golfista_id = ?1');
-		//$query = self::$EntityManager->createQuery('SELECT evu, equ, gol FROM equipos_usuarios evu JOIN equipos equ ON equ.id = evu.equipo_id JOIN golfistas gol ON gol.id = evu.golfistas_id WHERE equ.id = 1');
-		//$query = self::$EntityManager->createQueryBuilder();
-		//$query->addSelect('e');
-		//$query->addSelect('g');
-		//$query->addSelect('gs');
-
-		//$query->from('Equipo', 'e');
-		//$query->leftJoin('e.socio_id', 'g');
-		//$query->where('e.socio_id = ?1');		
-		//$query->setParameter(1, $id);
-
-		//$array = self::$EntityManager->find('Entity\Equipo', 1);
-		//print_r($query);
-		//$array = $query->getQuery()->getResult(2);//->getQuery()->getArrayResult();
-		//self::$EntityManager->detach($array);
-
-		//print_r($array);
-		//if (count($array)>0) {
-		//return $array;
-		/*}else{
-
-			throw new Exception("No found.", 1);
-			
-		}*/
-
 		
 	}
 
-	public function getIntegrantes($equipoId){
+	public function getEquipo($id)
+	{
+		$qb = self::$EntityManager->createQuery('SELECT e, g, s FROM Entity\Equipo e JOIN e.integrantes g JOIN e.socio s WHERE e.id = ?1');
+		$qb->setParameter(1, $id);
+		$array = $qb->getResult();
+		if (count($array)>0) {
+			return $array;
+		}else{
+			throw new ErrorException("No found.", 1);
+			
+		}
 		
+	}
+
+	public function getEquiposPorSocio($id){
+		$qb = self::$EntityManager->createQuery('SELECT e, g, s FROM Entity\Equipo e JOIN e.integrantes g JOIN e.socio s WHERE e.socio_id = ?1');
+		$qb->setParameter(1, $id);
+		$array = $qb->getResult();
+		if (count($array)>0) {
+			return $array;
+		}else{
+			throw new ErrorException("No found.", 1);
+			
+		}
 	}
 
 }

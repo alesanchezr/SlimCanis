@@ -363,6 +363,66 @@ class AsignacionesManager
 		return $result;
 	}
 
+	public function sorteo($data){
+		/*
+			Base times:
+			00:00 am 	(Received)
+			6:30 am 	(Minor point)
+			11:10 am 	(Major point)
+		*/
+		$baseInit = strtotime($data)+23400; //6:30
+		$baseEnd = $baseInit+16800; //11:10
+		$lessEnd = $lessInit = 0;//Big numbers for initial validations
+		echo "\n";
+		$init = strtotime($data)+24000;//+23400;
+		echo "\n";
+		$inicio = date("Y-m-d\Th:i:s",$init);
+		$fin = $init+15600;//+16800
+		$fin = date("Y-m-d\Th:i:s",$fin);
+		$qb = self::$EntityManager->createQueryBuilder();
+		$qb->select('s')
+		   ->from('Entity\FechaOcupada', 's')
+		   ->where('(s.fecha_inicio <= :inicio AND :inicio <= s.fecha_fin AND :fin >= s.fecha_fin) 
+		   		 OR (s.fecha_inicio >= :inicio AND :fin >= s.fecha_inicio AND :fin <= s.fecha_fin)
+		   		 OR (s.fecha_inicio >= :inicio AND :fin >= s.fecha_fin)
+		   		 ')
+		   ->setParameter("inicio",$inicio)
+		   ->setParameter("fin",$fin);
+		$array = $qb->getQuery()->getResult(2);
+
+		if (count($array) > 0) {
+			$lessEnd = $lessInit = 10000000000000;//Big numbers for initial validations
+
+			foreach ($array as $key => $evento) {
+				if (abs( strtotime($evento["fecha_inicio"]) - $baseInit) < $lessInit) {
+					$lessInit = ( strtotime($evento["fecha_inicio"]) - $baseInit);
+				}
+				if ($baseEnd - strtotime($evento["fecha_fin"]) < $lessEnd) {
+					$lessEnd = $baseEnd - strtotime($evento["fecha_fin"]);
+				}
+			}
+
+			if ($baseEnd<0) {
+				$baseEnd = 0;
+			}
+		}
+
+		$qb = self::$EntityManager->createQuery('SELECT r.id, r.fecha_solicitada FROM Entity\Reservacion r WHERE r.fecha_solicitada between ?1 AND ?2 OR r.fecha_solicitada between ?3 AND ?4 ORDER BY r.fecha_solicitada ASC');
+		$qb->setParameter(1, date('Y-m-d\Th:i:s', $baseInit));
+		$qb->setParameter(2, date('Y-m-d\Th:i:s', $baseInit+$lessInit));
+		$qb->setParameter(3, date('Y-m-d\Th:i:s', $baseEnd-$lessEnd));
+		$qb->setParameter(4, date('Y-m-d\Th:i:s', $baseEnd));
+		
+		$array = $qb->getResult();
+		//echo "\n";
+		//echo "Sorteo de reservas entre los horarios: ".date("Y-m-d\Th:i:s",$baseInit)."  ".date("Y-m-d\Th:i:s",($baseInit+$lessInit))." y ".date("Y-m-d\Th:i:s",($baseEnd-$lessEnd))."  ".date("Y-m-d\Th:i:s",$baseEnd);
+		//echo "\n";
+		//return 0;
+		print_r($array);
+
+		return $array;
+	}
+
 }
 
 ?>

@@ -313,4 +313,5 @@ class Equipo
     {
         return $this->socio;
     }
+
 }

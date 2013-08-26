@@ -19,8 +19,8 @@ class FechasManager extends BaseManager
 			6:30 am 	(Minor point)
 			11:10 am 	(Major point)
 		*/
-			$baseInit = strtotime($data)+23400; //6:30
-			$baseEnd = $baseInit+16800; //11:10
+		$baseInit = strtotime($data)+23400; //6:30
+		$baseEnd = $baseInit+16800; //11:10
 
 		//echo "\n";
 		$init = strtotime($data)+24000;//+23400;

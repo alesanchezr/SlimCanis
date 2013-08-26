@@ -167,4 +167,16 @@
 
 	});
 
+	$app->get('/asignaciones/sortear/:fecha', function($fecha) use ($app){
+		//try{
+			$equiposManager = new AsignacionesManager();
+			$equipos = $equiposManager->sorteo($fecha);
+
+			//print_r($equipos);
+			//$app->render(200,Utils::renderResult(equiposParser($equipos)));
+		//}catch(ErrorException $e){
+			//$app->render(200,Utils::renderFault($e->getMessage()));
+		//}
+	});
+
 ?>

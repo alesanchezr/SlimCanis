@@ -3,32 +3,16 @@
 	require_once 'src/com/4geeks/model/Equipos.manager.php';
 
 	//$app->get('/equipos/por_golfista/:id', $authenticate($app), function($id) use ($app){
-	$app->get('/equipos/por_socio/:id', function($id) use ($app){
+	$app->get('/equipos/:id', function($id) use ($app){
 
 		try {
 			$equiposManager = new EquiposManager();
-			$result = $equiposManager->getEquipos($id);
-			$response = array(
-							"success" => true,
-							"response" => $result
-							);
-			$app->render(200,$response);
-
-			break;
-
+			$equipos = $equiposManager->getEquipo($id);
+			
+			$app->render(200,Utils::renderResult(equiposParser($equipos)));
 		} catch (ErrorException $e) {
-			$result = array(
-					    "success"  => false, 
-					    "response" => array(
-					    	"message" => $e->getMessage()
-					    	)
-					);
-			print_r( $e->getMessage());
-			//$app->render(204,$result);
+			$app->render(200,Utils::renderFault($e->getMessage()));
 		}
-
-		//$app->render(200,$result);
-
 	});
 		// POST route
 	$app->post('/equipos', function() use ($app){
@@ -125,40 +109,69 @@
 	$app->get('/equipos', function() use ($app){
 		try{
 			$equiposManager = new EquiposManager();
-			$equipo = $equiposManager->getEquipos();
+			$equipos = $equiposManager->getEquipos();
 
-			$
-
-			$result = array();
-
-			print_r($equipo);
-
-			foreach ($equipo as $key => $value) {
-				$eq = array( 
-					            "id" => $value["id"],
-					            "socio" => array(
-					                "id" => $value["socio"]["id"],
-					                "nombre" => $value["socio"]["nombre"],
-					                "numero_socio" => $value["socio"]["numero_socio"],
-					                "handicap" => $value["socio"]["handicap"]
-					            ),
-					            "handicap_promedio" => $value["handicap_promedio"],
-					            "integrantes" => array()
-					        );
-				foreach ($value["integrantes"] as $key => $value2) {
-					$inte = array(
-							"id" => $value2[]
-						);
-				}
-			}
-
-	    	//$app->render(200,Utils::renderResult($result));
+	    	$app->render(200,Utils::renderResult(equiposParser($equipos)));
 
 		} catch (ErrorException $e) {
 			
 			$app->render(200,Utils::renderFault($e->getMessage()));
 		}
-
 	});
+
+	//$app->get('/equipos', $authenticate($app), function() use ($app){
+	$app->get('/equipos/por_socio/:id', function($id) use ($app){
+		try{
+
+			$equiposManager = new EquiposManager();
+			$equipos = $equiposManager->getEquiposPorSocio($id);
+
+			$app->render(200,Utils::renderResult(equiposParser($equipos)));
+		}catch(ErrorException $e){
+			$app->render(200,Utils::renderFault($e->getMessage()));
+		}
+	});
+
+	function equiposParser($equipos){
+		$result = array();
+		foreach ($equipos as $key => $equipo) {
+			$eq = array( 
+				            "id" => $equipo->getId(),
+				            "socio" => array(
+				                "id" => $equipo->getSocio()->getId(),
+				                "nombre" => $equipo->getSocio()->getNombre(),
+				                "numero_socio" => $equipo->getSocio()->getNumeroSocio(),
+				                "handicap" => $equipo->getSocio()->getHandicap()
+				            ),
+				            "handicap_promedio" => $equipo->getHandicapPromedio(),
+				            "integrantes" => array()
+				        );
+			foreach ($equipo->getIntegrantes() as $key => $integrante) {
+				$integ = array();
+				if ($integrante->getSocio() != null) {
+					$integ = array(
+							"id"=> $integrante->getSocio()->getId(),
+							"nombre"=> $integrante->getSocio()->getNombre(),
+							"numero_socio"=> $integrante->getSocio()->getNumeroSocio(),
+							"handicap"=> $integrante->getSocio()->getHandicap(),
+							"tipo"=> "socio"
+						);
+				}else{
+					$integ = array(
+							"id"=> $integrante->getInvitado()->getId(),
+							"nombre"=> $integrante->getInvitado()->getNombre(),
+							"cedula"=> $integrante->getInvitado()->getCedula(),
+							"handicap"=> $integrante->getInvitado()->getHandicap(),
+							"tipo"=> "invitado"
+						);
+				}
+				array_push($eq["integrantes"], $integ);
+				
+			}
+			array_push($result, $eq);
+		}
+
+		return $result;
+	}
 
 ?>
