@@ -16,7 +16,7 @@
 		$manager = new InvitadosManager();
 		$result = $manager->listar();
 
-	    $app->render(200,$result);
+	    $app->render(200,Utils::renderResult($result));
 
 	});
 
