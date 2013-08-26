@@ -183,7 +183,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`ticket` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `reservacion_id` VARCHAR(45) NOT NULL,
+  `reservacion_id` INT NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
