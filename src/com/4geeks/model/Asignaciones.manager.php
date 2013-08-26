@@ -236,89 +236,57 @@ class AsignacionesManager extends BaseManager
 	*	Entrada:
 	*
 	*	{
-	*	    "fecha_inicio": "1961-01-02 06:30:32",
-	*	    "cadi": "Raúl Pérez",
-	*	    "editado_por": "amilano"
+	*	    "id": 1,
+	*	    "cadi_id": 1
 	*	}
 	*
 	**/
 
     public  function iniciarJuego($data)
 	{
-
+		$array_data = (array) $data;
 		/*
-		$result = array(
-		    "success"  => true, 
-		    "response" => array(
-	            array(
-	            "id" => 1,
-	            "fecha_asignada" => "1969-01-01 08:50:00",
-	            "fecha_inicio" => "1961-01-02 06:30:32",
-	            "fecha_fin" => "0000-00-00 00:00:00",
-	            "estatus" => "confirmada",
-	            "hoyo" => 10,
-	            "reservacion" => array(
-	                "id" => 1, 
-	                "fecha" => "1969-01-01 06:30:00", 
-	                "estatus" => "asignada"
-	                "equipo" => array( 
-	                    "id" => 1,
-	                    "perfil_id" => 1111, 
-	                    "handicap_promedio" => 12,
-	                    "integrantes" => array( 
-	                        array("perfil_id" => 1111),
-	                        array("perfil_id" => 2222),
-	                        array("perfil_id" => 3333)
-	                    )
-	                )
-	            ),
-		    )
-		);
+		agrego el cadi
+		actualizo la hora de inicio
+		coloco quien edito la asignacion
+		 */
+		
+		$cadi = self::$EntityManager->find("Entity\Cadi",$array_data['cadi_id']);
+		$asignacion = self::$EntityManager->find("Entity\Asignacion",$array_data['id']);
 
-		return $result;*/
+		if(!$asignacion) throw new ErrorException("La asignacion es invalida.", 1);
+		if(!$cadi) throw new ErrorException("El cadi no existe.", 1);
+		
+		$asignacion->setCadi($cadi);
+		$asignacion->setFechaInicio("2009-01-01 08:50:00");
+		$asignacion->setEditadoPor($_SESSION["user"]->id);
+		self::$EntityManager->persist($asignacion);
+
+		return $asignacion;
 	}
 
 	/**
 	*	Entrada:
 	*
 	*	{
-    *		"fecha_fin": "1961-01-02 08:33:12",
-    *		"editado_por": "amilano"
+    *		"id": 1,
 	*	}
 	*
 	**/
 
     public  function terminarJuego($data)
 	{
-		/*
-		$result = array(
-		    "success"  => true, 
-		    "response" => array(
-	            "id" => 1,
-	            "fecha_asignada" => "1969-01-01 08:50:00",
-	            "fecha_inicio" => "0000-00-00 00:00:00",
-	            "fecha_fin" => "1961-01-02 08:33:17",
-	            "estatus" => "confirmada",
-	            "hoyo" => 10,
-	            "reservacion" => array(
-	                "id" => 1, 
-	                "fecha" => "1969-01-01 06:30:00", 
-	                "estatus" => "negada"
-	                "equipo" => array( 
-	                    "id" => 1,
-	                    "perfil_id" => 1111, 
-	                    "handicap_promedio" => 12,
-	                    "integrantes" => array( 
-	                        array("perfil_id" => 1111),
-	                        array("perfil_id" => 2222),
-	                        array("perfil_id" => 3333)
-	                    )
-	                )
-	            )
-		    )
-		);*/
+		$array_data = (array) $data;
+		
+		$asignacion = self::$EntityManager->find("Entity\Asignacion",$array_data['id']);
 
-		return $result;
+		if(!$asignacion) throw new ErrorException("La asignacion es invalida.", 1);
+		
+		$asignacion->setFechaFin("2009-01-01 08:50:00");
+		$asignacion->setEditadoPor($_SESSION["user"]->id);
+		self::$EntityManager->persist($asignacion);
+
+		return $asignacion;
 	}
 
 	public function sorteo($data){

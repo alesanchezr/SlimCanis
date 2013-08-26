@@ -14,6 +14,7 @@ require_once "bootstrap.php";
  * your Slim application now by passing an associative array
  * of setting names and values into the application constructor.
  */
+ date_default_timezone_set('America/Caracas');
 
 require_once "slim-bootstrap.php";
 

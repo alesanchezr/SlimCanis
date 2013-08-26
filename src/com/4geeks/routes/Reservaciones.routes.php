@@ -92,7 +92,7 @@
 	});
 
 	// POST route
-	$app->post('/reservaciones/cambiar_estatus', function() use ($app){
+	$app->post('/reservaciones/cambiar_estatus', $authenticate($app), function() use ($app){
 
 		try
 		{
@@ -102,7 +102,7 @@
 			$reservacion = $reservacionesManager->cambiarStatus($data);
 
 			EquiposManager::$EntityManager->flush();
-		    $app->render(200,Utils::renderResult(array($reservacion->toArrayMin()));
+		    $app->render(200,Utils::renderResult(array($reservacion->toArrayMin())));
 		}
 		catch (ErrorException $e)
 		{
