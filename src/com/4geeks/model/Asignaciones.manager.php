@@ -1,6 +1,10 @@
 <?php
 
-class AsignacionesManager
+use Entity\Asignacion;
+
+require_once "src/com/4geeks/model/Base.manager.php";
+
+class AsignacionesManager extends BaseManager
 {
 
 	// POST route
@@ -42,9 +46,9 @@ class AsignacionesManager
 		                            "username" => 2222,
 		                            "email" => "2222@ccc.com"
 		                        ),
-		                        "numero_socio":2222,
-		                        "handicap":10,
-		                        "socio":"NULL"
+		                        "numero_socio"=>2222,
+		                        "handicap"=>10,
+		                        "socio"=>"NULL"
 		                    ),
 		                    array(
 		                        "id" => 3,
@@ -85,9 +89,9 @@ class AsignacionesManager
 		                            "username" => 2222,
 		                            "email" => "2222@ccc.com"
 		                        ),
-		                        "numero_socio":2222,
-		                        "handicap":10,
-		                        "socio":"NULL"
+		                        "numero_socio"=>2222,
+		                        "handicap"=>10,
+		                        "socio"=>"NULL"
 		                    ),
 		                    array(
 		                        "id" => 3,
@@ -146,9 +150,9 @@ class AsignacionesManager
 		                            "username" => 2222,
 		                            "email" => "2222@ccc.com"
 		                        ),
-		                        "numero_socio":2222,
-		                        "handicap":10,
-		                        "socio":"NULL"
+		                        "numero_socio"=>2222,
+		                        "handicap"=>10,
+		                        "socio"=>"NULL"
 		                    ),
 		                    array(
 		                        "id" => 3,
@@ -246,7 +250,7 @@ class AsignacionesManager
 	**/
     public  function modificarStatus($data)
 	{
-		$result = array(
+		/*$result = array(
 		    "success"  => true, 
 		    "response" => array(
 	            "id" => 1,
@@ -271,9 +275,9 @@ class AsignacionesManager
 	                )
 	            )
 		    )
-		);
+		);*/
 
-		return $result;
+		//return $result;
 	}
 
 	// POST route
@@ -290,7 +294,7 @@ class AsignacionesManager
 
     public  function iniciarJuego($data)
 	{
-		$result = array(
+		/*$result = array(
 		    "success"  => true, 
 		    "response" => array(
 	            array(
@@ -318,7 +322,7 @@ class AsignacionesManager
 		    )
 		);
 
-		return $result;
+		return $result;*/
 	}
 
 	/**
@@ -333,7 +337,7 @@ class AsignacionesManager
 
     public  function terminarJuego($data)
 	{
-		$result = array(
+		/*$result = array(
 		    "success"  => true, 
 		    "response" => array(
 	            "id" => 1,
@@ -360,7 +364,7 @@ class AsignacionesManager
 		    )
 		);
 
-		return $result;
+		return $result;*/
 	}
 
 	public function sorteo($data){
@@ -407,22 +411,65 @@ class AsignacionesManager
 			}
 		}
 
-		$qb = self::$EntityManager->createQuery('SELECT r.id, r.fecha_solicitada FROM Entity\Reservacion r WHERE r.fecha_solicitada between ?1 AND ?2 OR r.fecha_solicitada between ?3 AND ?4 ORDER BY r.fecha_solicitada ASC');
-		$qb->setParameter(1, date('Y-m-d\Th:i:s', $baseInit));
-		$qb->setParameter(2, date('Y-m-d\Th:i:s', $baseInit+$lessInit));
-		$qb->setParameter(3, date('Y-m-d\Th:i:s', $baseEnd-$lessEnd));
-		$qb->setParameter(4, date('Y-m-d\Th:i:s', $baseEnd));
-		
-		$array = $qb->getResult();
-		//echo "\n";
-		//echo "Sorteo de reservas entre los horarios: ".date("Y-m-d\Th:i:s",$baseInit)."  ".date("Y-m-d\Th:i:s",($baseInit+$lessInit))." y ".date("Y-m-d\Th:i:s",($baseEnd-$lessEnd))."  ".date("Y-m-d\Th:i:s",$baseEnd);
-		//echo "\n";
-		//return 0;
-		print_r($array);
+		$temp = $baseInit;
+		for ($i=0; $i < ( ($lessInit) / 600); $i++) {
+			self::getSorteoParaHora($temp);
+			$temp = $temp+600;
+		}
 
-		return $array;
+		$temp = $baseEnd-$lessEnd;
+		for ($i=0; $i < ( ($lessEnd+600) / 600); $i++) {
+			self::getSorteoParaHora($temp);
+			$temp = $temp+600;
+		}
+
+		//print_r($array);
+
+		//return $array;
 	}
 
+	public function getSorteoParaHora($hora){
+		$handicap = array();
+		array_push($handicap, array(0 => 0,1 => 8));
+		array_push($handicap, array(0 => 9,1 => 12));
+		array_push($handicap, array(0 => 13,1 => 18));
+		array_push($handicap, array(0 => 19,1 => 25));
+
+		for ($i=0; $i < 4; $i++) { //4 Conjuntos de handicap (0-8,9-12,13-18,19-)
+			$qb = self::$EntityManager->createQuery('SELECT COUNT(t) FROM Entity\Ticket t LEFT JOIN t.reservacion r LEFT JOIN r.equipo e WHERE r.fecha_solicitada = ?1 AND e.handicap_promedio between ?2 AND ?3');
+			$qb->setParameter(1, date('Y-m-d\Th:i:s', $hora));
+			$qb->setParameter(2,$handicap[$i][0]);
+			$qb->setParameter(3,$handicap[$i][1]);
+			$array = $qb->getResult(2);
+
+			if ($array[0][1]>0) {
+				//echo "\n";
+				//echo "\n";
+				//echo "COUNT: ".$array[0][1];
+				//echo "\n";
+				//echo "Random: ".rand(1,$array[0][1]);
+				$offset = rand(1,$array[0][1])-1;
+				echo "\n";
+
+				$qb = self::$EntityManager->createQuery('SELECT t FROM Entity\Ticket t LEFT JOIN t.reservacion r LEFT JOIN r.equipo e WHERE r.fecha_solicitada = ?1 AND e.handicap_promedio between ?2 AND ?3');
+				$qb->setParameter(1, date('Y-m-d\Th:i:s', $hora));
+				$qb->setParameter(2,$handicap[$i][0]);
+				$qb->setParameter(3,$handicap[$i][1]);
+				$qb->setMaxResults(1);
+				$qb->setFirstResult($offset);
+
+				$array2 = $qb->getResult();
+
+				foreach ($array2 as $key => $ticketSelected) {
+					echo "Equipo seleccionado para el salir (".date("Y-m-d\Th:i:s",$hora)."): ".$ticketSelected->getReservacion()->getEquipo()->getId();	
+				}
+			}else{
+				echo "\n";
+				echo "Equipo seleccionado para el salir (".date("Y-m-d\Th:i:s",$hora)."): N/A";
+
+			}
+		}	
+	}
 }
 
 ?>
