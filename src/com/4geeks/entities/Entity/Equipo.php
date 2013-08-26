@@ -314,7 +314,6 @@ class Equipo
         return $this->socio;
     }
 
-
     public function toArray()
     {
         $integrantes = array();
@@ -329,4 +328,5 @@ class Equipo
                 "integrantes" => $integrantes
             );
     }
+
 }

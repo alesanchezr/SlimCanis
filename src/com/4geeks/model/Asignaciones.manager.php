@@ -47,9 +47,9 @@ class AsignacionesManager extends BaseManager
 		                            "username" => 2222,
 		                            "email" => "2222@ccc.com"
 		                        ),
-		                        "numero_socio": 2222,
-		                        "handicap":10,
-		                        "socio":"NULL"
+		                        "numero_socio"=>2222,
+		                        "handicap"=>10,
+		                        "socio"=>"NULL"
 		                    ),
 		                    array(
 		                        "id" => 3,
@@ -90,9 +90,9 @@ class AsignacionesManager extends BaseManager
 		                            "username" => 2222,
 		                            "email" => "2222@ccc.com"
 		                        ),
-		                        "numero_socio":2222,
-		                        "handicap":10,
-		                        "socio":"NULL"
+		                        "numero_socio"=>2222,
+		                        "handicap"=>10,
+		                        "socio"=>"NULL"
 		                    ),
 		                    array(
 		                        "id" => 3,
@@ -152,9 +152,9 @@ class AsignacionesManager extends BaseManager
 		                            "username" => 2222,
 		                            "email" => "2222@ccc.com"
 		                        ),
-		                        "numero_socio":2222,
-		                        "handicap":10,
-		                        "socio":"NULL"
+		                        "numero_socio"=>2222,
+		                        "handicap"=>10,
+		                        "socio"=>"NULL"
 		                    ),
 		                    array(
 		                        "id" => 3,
@@ -280,6 +280,7 @@ class AsignacionesManager extends BaseManager
 
     public  function iniciarJuego($data)
 	{
+
 		/*
 		$result = array(
 		    "success"  => true, 
@@ -308,8 +309,8 @@ class AsignacionesManager extends BaseManager
 	            ),
 		    )
 		);
-*/
-		return $result;
+
+		return $result;*/
 	}
 
 	/**
@@ -355,6 +356,109 @@ class AsignacionesManager extends BaseManager
 		return $result;
 	}
 
+	public function sorteo($data){
+		/*
+			Base times:
+			00:00 am 	(Received)
+			6:30 am 	(Minor point)
+			11:10 am 	(Major point)
+		*/
+		$baseInit = strtotime($data)+23400; //6:30
+		$baseEnd = $baseInit+16800; //11:10
+		$lessEnd = $lessInit = 0;//Big numbers for initial validations
+		echo "\n";
+		$init = strtotime($data)+24000;//+23400;
+		echo "\n";
+		$inicio = date("Y-m-d\Th:i:s",$init);
+		$fin = $init+15600;//+16800
+		$fin = date("Y-m-d\Th:i:s",$fin);
+		$qb = self::$EntityManager->createQueryBuilder();
+		$qb->select('s')
+		   ->from('Entity\FechaOcupada', 's')
+		   ->where('(s.fecha_inicio <= :inicio AND :inicio <= s.fecha_fin AND :fin >= s.fecha_fin) 
+		   		 OR (s.fecha_inicio >= :inicio AND :fin >= s.fecha_inicio AND :fin <= s.fecha_fin)
+		   		 OR (s.fecha_inicio >= :inicio AND :fin >= s.fecha_fin)
+		   		 ')
+		   ->setParameter("inicio",$inicio)
+		   ->setParameter("fin",$fin);
+		$array = $qb->getQuery()->getResult(2);
+
+		if (count($array) > 0) {
+			$lessEnd = $lessInit = 10000000000000;//Big numbers for initial validations
+
+			foreach ($array as $key => $evento) {
+				if (abs( strtotime($evento["fecha_inicio"]) - $baseInit) < $lessInit) {
+					$lessInit = ( strtotime($evento["fecha_inicio"]) - $baseInit);
+				}
+				if ($baseEnd - strtotime($evento["fecha_fin"]) < $lessEnd) {
+					$lessEnd = $baseEnd - strtotime($evento["fecha_fin"]);
+				}
+			}
+
+			if ($baseEnd<0) {
+				$baseEnd = 0;
+			}
+		}
+
+		$temp = $baseInit;
+		for ($i=0; $i < ( ($lessInit) / 600); $i++) {
+			self::getSorteoParaHora($temp);
+			$temp = $temp+600;
+		}
+
+		$temp = $baseEnd-$lessEnd;
+		for ($i=0; $i < ( ($lessEnd+600) / 600); $i++) {
+			self::getSorteoParaHora($temp);
+			$temp = $temp+600;
+		}
+
+		//print_r($array);
+
+		//return $array;
+	}
+
+	public function getSorteoParaHora($hora){
+		$handicap = array();
+		array_push($handicap, array(0 => 0,1 => 8));
+		array_push($handicap, array(0 => 9,1 => 12));
+		array_push($handicap, array(0 => 13,1 => 18));
+		array_push($handicap, array(0 => 19,1 => 25));
+
+		for ($i=0; $i < 4; $i++) { //4 Conjuntos de handicap (0-8,9-12,13-18,19-)
+			$qb = self::$EntityManager->createQuery('SELECT COUNT(t) FROM Entity\Ticket t LEFT JOIN t.reservacion r LEFT JOIN r.equipo e WHERE r.fecha_solicitada = ?1 AND e.handicap_promedio between ?2 AND ?3');
+			$qb->setParameter(1, date('Y-m-d\Th:i:s', $hora));
+			$qb->setParameter(2,$handicap[$i][0]);
+			$qb->setParameter(3,$handicap[$i][1]);
+			$array = $qb->getResult(2);
+
+			if ($array[0][1]>0) {
+				//echo "\n";
+				//echo "\n";
+				//echo "COUNT: ".$array[0][1];
+				//echo "\n";
+				//echo "Random: ".rand(1,$array[0][1]);
+				$offset = rand(1,$array[0][1])-1;
+				echo "\n";
+
+				$qb = self::$EntityManager->createQuery('SELECT t FROM Entity\Ticket t LEFT JOIN t.reservacion r LEFT JOIN r.equipo e WHERE r.fecha_solicitada = ?1 AND e.handicap_promedio between ?2 AND ?3');
+				$qb->setParameter(1, date('Y-m-d\Th:i:s', $hora));
+				$qb->setParameter(2,$handicap[$i][0]);
+				$qb->setParameter(3,$handicap[$i][1]);
+				$qb->setMaxResults(1);
+				$qb->setFirstResult($offset);
+
+				$array2 = $qb->getResult();
+
+				foreach ($array2 as $key => $ticketSelected) {
+					echo "Equipo seleccionado para el salir (".date("Y-m-d\Th:i:s",$hora)."): ".$ticketSelected->getReservacion()->getEquipo()->getId();	
+				}
+			}else{
+				echo "\n";
+				echo "Equipo seleccionado para el salir (".date("Y-m-d\Th:i:s",$hora)."): N/A";
+
+			}
+		}	
+	}
 }
 
 ?>

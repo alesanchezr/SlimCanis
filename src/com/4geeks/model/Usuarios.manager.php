@@ -43,7 +43,6 @@ class UsuariosManager extends BaseManager
 			$user->setCreatedate('1985-10-20');
 			$user->setUpdatedate('1985-10-20');
 			self::$EntityManager->persist($user);
-			self::$EntityManager->flush();
 
 			return $user;
 		}

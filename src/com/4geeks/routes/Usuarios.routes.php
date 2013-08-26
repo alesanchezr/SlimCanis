@@ -26,6 +26,7 @@
 			$user = $usuariosManager->crearUsuario($data);
 
 			$role = $user->getRole();
+			UsuariosManager::$EntityManager->flush();
 			$app->render(200,Utils::renderResult(array(
 						        "username" => $user->getUsername(), 
 						        "password" => $user->getPassword(),
