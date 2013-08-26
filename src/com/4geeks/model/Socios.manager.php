@@ -62,7 +62,7 @@ class SociosManager extends BaseManager
 							"username" => $data->username, 
 					    	"password" => $data->password,
 					    	"email" => $data->email,
-					    	"role_id" => $data->role_id 
+					    	"role_id" => 3 
 				    	);
 		$userToCreate = json_encode($userToCreate);
 		$userToCreate = json_decode($userToCreate);
@@ -82,13 +82,11 @@ class SociosManager extends BaseManager
 			$socio->setUpdatedate('1987-10-16');
 
 			self::$EntityManager->persist($socio);
-			self::$EntityManager->flush();
-
+			
 			return $socio;
 
 		}else{
-			self::$EntityManager->getConnection()->rollback();
-			self::$EntityManager->close();
+
 			throw new Exception("Error creando usuario", 1);
 			
 		}

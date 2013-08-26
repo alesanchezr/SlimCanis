@@ -1,6 +1,7 @@
 <?php
 
 use Entity\Equipo;
+use Entity\Integrante;
 
 require_once "src/com/4geeks/model/Base.manager.php";
 
@@ -82,9 +83,22 @@ class EquiposManager extends BaseManager
 		return $result;
 	}
 
-	public function getEquipos($id)
+	public function getEquipos()
 	{
 		
+		/*$qb = self::$EntityManager->createQueryBuilder();
+		$qb->select('s, g')
+		   ->from('Entity\Equipo', 's')
+		   ->leftJoin("s.integrante", 'g');*/
+		$qb = self::$EntityManager->createQuery('SELECT e, g, s FROM Entity\Equipo e JOIN e.integrantes g JOIN e.socio s');
+		//$array = $qb->getQuery()->getResult(2);
+		$array = $qb->getResult(2);
+		if (count($array)>0) {
+			return $array;
+		}else{
+			throw new Exception("No found.", 1);
+			
+		}
 		//require_once "src/com/4geeks/entities/Entity/Equipo.php";
 
 		/*$qb = self::$EntityManager->createQueryBuilder();
@@ -104,12 +118,12 @@ class EquiposManager extends BaseManager
 		//$query->where('e.socio_id = ?1');		
 		//$query->setParameter(1, $id);
 
-		$array = self::$EntityManager->find('Entity\Equipo', 1);
+		//$array = self::$EntityManager->find('Entity\Equipo', 1);
 		//print_r($query);
 		//$array = $query->getQuery()->getResult(2);//->getQuery()->getArrayResult();
 		//self::$EntityManager->detach($array);
 
-		print_r($array);
+		//print_r($array);
 		//if (count($array)>0) {
 		//return $array;
 		/*}else{
@@ -118,6 +132,10 @@ class EquiposManager extends BaseManager
 			
 		}*/
 
+		
+	}
+
+	public function getIntegrantes($equipoId){
 		
 	}
 

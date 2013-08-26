@@ -37,26 +37,30 @@
 	//$app->get('/socio', $authenticate($app), function() use ($app){
 	$app->get('/socios', function() use ($app){
 
-		$socioManager = new SociosManager();
-		$socios = $socioManager->listar();
+		try{
+			$socioManager = new SociosManager();
+			$socios = $socioManager->listar();
 
-		$result = array();
+			$result = array();
 
-		foreach ($socios as $key => $value) {
-			$socio = "";
-			$socio = array(
-				"id" => utf8_encode($value["id"]),
-				"user_id" => utf8_encode($value["user_id"]),
-				"nombre" => utf8_encode($value["nombre"]),
-				"cedula" => utf8_encode($value["cedula"]),
-				"numero_socio" => utf8_encode($value["numero_socio"]),
-				"handicap" => utf8_encode($value["handicap"]),
-				"createdate" => utf8_encode($value["createdate"])
-				);
-			array_push($result, $socio);
+			foreach ($socios as $key => $value) {
+				$socio = "";
+				$socio = array(
+					"id" => utf8_encode($value["id"]),
+					"user_id" => utf8_encode($value["user_id"]),
+					"nombre" => utf8_encode($value["nombre"]),
+					"cedula" => utf8_encode($value["cedula"]),
+					"numero_socio" => utf8_encode($value["numero_socio"]),
+					"handicap" => utf8_encode($value["handicap"]),
+					"createdate" => "".date("Y-m-d\Th:i:s",strtotime($value["createdate"]))
+					);
+				array_push($result, $socio);
+			}
+
+		    $app->render(200,Utils::renderResult($result));
+		}catch(ErrorException $e){
+			$app->render(200,Utils::renderFault($e->getMessage()));
 		}
-
-	    $app->render(200,Utils::renderResult($result));
 	});
 
 	// POST route
@@ -114,27 +118,30 @@
 			$socio = $gfManager->crear($data);
 
 			$result = array(
-			            "nombre" => $socio->getName(),
+			            "nombre" => $socio->getNombre(),
 			            "cedula" => $socio->getCedula(),
 			            "numero_socio" => $socio->getNumeroSocio(),
 			            "handicap" => $socio->getHandicap(),
+			            "telefono" => $socio->getTelefono(),
 			            "user" => array(
-			                "id" => $socio->user->getId(), 
-			                "username" => $socio->user->getUsername(), 
-			                "password" => $socio->user->getPassword(),
-			                "email" => $socio->user->getEmail(),
+			                "id" => $socio->getUser()->getId(), 
+			                "username" => $socio->getUser()->getUsername(), 
+			                "password" => $socio->getUser()->getPassword(),
+			                "email" => $socio->getUser()->getEmail(),
 			                "role" => array( 
-			                    "id" => $socio->user->role->getId(),
-			                    "nombre"=> $socio->user->role->getNombre()
+			                    "id" => $socio->getUser()->getRole()->getId(),
+			                    "nombre"=> $socio->getUser()->getRole()->getName()
 			                ),
-			                "createdate" => $socio->user->getCreateDate()
+			                "createdate" => "".date("Y-m-d\Th:i:s",strtotime($socio->getUser()->getCreateDate()))
 			            ),
-			            "createdate" => $socio->getCreateDate()
+			            "createdate" => "".date("Y-m-d\Th:i:s",strtotime($socio->getCreateDate()))
 					);
+
+			SociosManager::$EntityManager->flush();
 
 	    	$app->render(200,Utils::renderResult($result));
 
-		} catch (Exception $e) {
+		} catch (ErrorException $e) {
 			
 			$app->render(200,Utils::renderFault($e->getMessage()));
 		}
