@@ -102,7 +102,30 @@
 			$reservacion = $reservacionesManager->cambiarStatus($data);
 
 			EquiposManager::$EntityManager->flush();
-		    $app->render(200,Utils::renderResult(array($reservacion->toArrayMin()));
+		    $app->render(200,Utils::renderResult(array($reservacion->toArrayMin())));
+		}
+		catch (ErrorException $e)
+		{
+			$app->render(200,Utils::renderFault($e->getMessage()));
+		}
+
+	});
+
+	// GET route
+	$app->get('/reservaciones_semana_actual/:numero_socio', function($numero_socio) use ($app){
+
+		try
+		{
+			$data = json_decode($app->request()->getBody());
+			$reservacionesManager = new ReservacionesManager();
+			$reservaciones = $reservacionesManager->getReservacionesSemana($numero_socio);
+
+			$rsvp_array = array();
+			foreach ($reservaciones as $rsvp) {
+				array_push($rsvp_array, $rsvp->toArrayParaAsignacion());
+			}
+
+		    $app->render(200,Utils::renderResult(array($rsvp_array)));
 		}
 		catch (ErrorException $e)
 		{

@@ -228,4 +228,15 @@ class Cadi
     {
         return $this->asignacions;
     }
+
+
+    public function toArray()
+    {
+        return array(
+            "id" => $this->id,
+            "nombre" => $this->nombre,
+            "cedula" => $this->cedula,
+            "telefono" => $this->telefono
+            );
+    }
 }

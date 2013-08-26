@@ -73,6 +73,19 @@ class ReservacionesManager extends BaseManager
 		return array();
 	}
 
+    public  function getReservacionesSemana($numero_socio)
+	{
+		$qb = self::$EntityManager->createQueryBuilder();
+		$qb->select('s')
+		   ->from('Entity\Reservacion', 'r');
+		   //->where('')
+		   //->setParameter("inicio",$inicio)
+		   //->setParameter("fin",$fin);
+		$array = $qb->getQuery()->getResult(2);
+
+		return $array;
+	}
+
 	/*
 
 	Este es un metodo de prueba para que vean como trabajar con Doctrine
