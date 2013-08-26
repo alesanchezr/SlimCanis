@@ -11,7 +11,7 @@ $app->post("/sesiones/iniciar", function () use ($app) {
 
     if ($data->username != "123456") {
         $errors['username'] = "Username is not found.";
-    } else if ($data->password != "dRs32sdlaSAds") {
+    } else if ($data->password != "88ea39439e74fa27c09a4fc0bc8ebe6d00978392") {
         $errors['password'] = "Password does not match.";
     }
 

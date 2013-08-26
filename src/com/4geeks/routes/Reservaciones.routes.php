@@ -80,7 +80,6 @@
 
 	});
 
-	// POST route
 	$app->post('/reservaciones/por_fecha/:fecha', $authenticate($app), function() use ($app){
 
 		$data = json_decode($app->request()->getBody());
