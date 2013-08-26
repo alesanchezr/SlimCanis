@@ -261,6 +261,21 @@ class Asignacion extends \Entity\Asignacion implements \Doctrine\ORM\Proxy\Proxy
         return parent::getInvitados();
     }
 
+<<<<<<< HEAD
+    public function toArray()
+    {
+        $this->__load();
+        return parent::toArray();
+    }
+
+    public function toArrayMin()
+    {
+        $this->__load();
+        return parent::toArrayMin();
+    }
+
+=======
+>>>>>>> 057ce9b36b279c8ce7d90f557eda41692f315b5f
 
     public function __sleep()
     {

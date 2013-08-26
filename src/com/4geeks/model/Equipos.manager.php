@@ -78,6 +78,68 @@ class EquiposManager extends BaseManager
 		return $equipo;
 	}
 
+	/*
+		ENTRADA:
+
+		{
+		    "equipo": 1,
+		    "integrante": {
+		        "id":1,
+		        "tipo": "socio"
+		    }
+		}
+
+	*/
+
+	public function agregarIntegrante($data)
+	{
+		$array_data = (array) $data;
+
+		$equipo_id = $array_data["equipo"];
+		$integrante_array = (array) $array_data["integrante"];
+
+		$equipo = self::$EntityManager->find("Entity\Equipo",$equipo_id);
+		$integrante = new Integrante();
+		$integrante->setEquipo($equipo);
+
+		if($integrante_array["tipo"]=="socio")
+		{
+			$qb = self::$EntityManager->createQueryBuilder();
+			$qb->select('i.id')
+			   ->from('Entity\Integrante', 'i')
+			   ->where('i.equipo_id = ?1')
+			   ->andWhere('i.socio_id = ?2')
+			   ->setParameter(1, $equipo_id)
+			   ->setParameter(2, $integrante_array['id']);
+			$array = $qb->getQuery()->getResult(2);
+			if(count($array)>0) throw new ErrorException("Este golfista ya esta en este equipo", 1);
+
+			$int = self::$EntityManager->find("Entity\Socio",$integrante_array['id']);
+			$integrante->setSocio($int);
+		}
+		else if($integrante_array["tipo"]=="invitado")
+		{
+			$qb = self::$EntityManager->createQueryBuilder();
+			$qb->select('i.id')
+			   ->from('Entity\Integrante', 'i')
+			   ->where('i.equipo_id = ?1')
+			   ->andWhere('i.invitado_id = ?2')
+			   ->setParameter(1, $equipo_id)
+			   ->setParameter(2, $integrante_array['id']);
+			$array = $qb->getQuery()->getResult(2);
+			if(count($array)>0) throw new ErrorException("Este golfista ya esta en este equipo", 1);
+
+			$int = self::$EntityManager->find("Entity\Integrante",$integrante_array['id']);
+			$integrante->setInvitado($int);
+		}
+		self::$EntityManager->persist($integrante);
+
+		$equipo->addIntegrante($integrante);
+		self::$EntityManager->persist($equipo);
+
+		return $equipo;
+	}
+
 	public function getEquipos()
 	{
 		$qb = self::$EntityManager->createQuery('SELECT e, g, s FROM Entity\Equipo e JOIN e.integrantes g JOIN e.socio s');

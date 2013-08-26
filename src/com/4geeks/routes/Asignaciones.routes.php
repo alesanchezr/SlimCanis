@@ -7,6 +7,35 @@
 	/**
 	*	Entrada:
 	*
+	*	{
+	*		"id" : 1,
+	*	    "estatus": "rechazada",
+	*	}
+	*
+	**/
+	$app->post('/asignaciones/cambiar_estatus', $authenticate($app), function() use ($app){
+
+		try
+		{
+			$data = json_decode($app->request()->getBody());
+
+			$asignacionesManager = new AsignacionesManager();
+			$result = $asignacionesManager->modificarStatus($data);
+			
+			AsignacionesManager::$EntityManager->flush();
+		    $app->render(200,Utils::renderResult($result->toArray()));
+		}
+		catch (ErrorException $e)
+		{
+			$app->render(200,Utils::renderFault($e->getMessage()));
+		}
+
+	});
+
+	// POST route
+	/**
+	*	Entrada:
+	*
 	*	VACIO
 	*
 	**/
@@ -97,26 +126,6 @@
 
 		$asignacionesManager = new AsignacionesManager();
 		$result = $asignacionesManager->asignarHora($data);
-
-	    $app->render(200,$result);
-
-	});
-
-	// POST route
-	/**
-	*	Entrada:
-	*
-	*	{
-	*	    "estatus": "confirmada",
-	*	}
-	*
-	**/
-	$app->post('/asignaciones/:id/cambiar_estatus', $authenticate($app), function($id) use ($app){
-
-		$data = json_decode($app->request()->getBody());
-
-		$asignacionesManager = new AsignacionesManager();
-		$result = $asignacionesManager->modificarSatus($data);
 
 	    $app->render(200,$result);
 

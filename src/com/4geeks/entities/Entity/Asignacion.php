@@ -570,4 +570,30 @@ class Asignacion
     {
         return $this->invitados;
     }
+
+    public function toArray()
+    {
+        return array(
+                    "id" => $this->id,
+                    "fecha_asignada" => $this->fecha_asignada,
+                    "fecha_inicio" => $this->fecha_inicio,
+                    "fecha_fin" => $this->fecha_fin,
+                    "estatus" => $this->estatus,
+                    "hoyo" => $this->hoyo,
+                    "reservacion" => $this->reservacion->toArrayMin()
+                );
+    }
+
+    public function toArrayMin()
+    {
+        return array(
+            "id" => $this->id, 
+            "fecha_asignada" => $this->fecha_asignada, 
+            "fecha_inicio" => $this->fecha_inicio,
+            "fecha_fin" => $this->fecha_fin,
+            "estatus" => $this->estatus,
+            "hoyo" => $this->hoyo
+            );
+    }
+
 }

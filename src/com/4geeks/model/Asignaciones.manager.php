@@ -16,6 +16,7 @@ class AsignacionesManager extends BaseManager
 	**/
     public  function listarAsignaciones($data)
 	{
+		/*
 		$result = array(
 		    "success"  => true, 
 		    "response" => array(
@@ -106,7 +107,7 @@ class AsignacionesManager extends BaseManager
 		            "asignacion" => array()
 		        )
 		    )
-		);
+		);*/
 
 		return $result;
 	}
@@ -120,6 +121,7 @@ class AsignacionesManager extends BaseManager
 	**/
     public  function sortear($data)
 	{
+		/*
 		$result = array(
 		    "success"  => true, 
 		    "response" => array(
@@ -168,7 +170,7 @@ class AsignacionesManager extends BaseManager
 		        )
 		    )
 		);
-
+		*/
 		return $result;
 	}
 	// POST route
@@ -248,36 +250,20 @@ class AsignacionesManager extends BaseManager
 	*	}
 	*
 	**/
-    public  function modificarStatus($data)
+    public function modificarStatus($data)
 	{
-		/*$result = array(
-		    "success"  => true, 
-		    "response" => array(
-	            "id" => 1,
-	            "fecha_asignada" => "1969-01-01 08:50:00",
-	            "fecha_inicio" => "0000-00-00 00:00:00",
-	            "fecha_fin" => "0000-00-00 00:00:00",
-	            "estatus" => "confirmada",
-	            "hoyo" => 10,
-	            "reservacion" => array(
-	                "id" => 1, 
-	                "fecha" => "1969-01-01 06:30:00", 
-	                "estatus" => "negada"
-	                "equipo" => array( 
-	                    "id" => 1,
-	                    "perfil_id" => 1111, 
-	                    "handicap_promedio" => 12,
-	                    "integrantes" => array( 
-	                        array("perfil_id" => 1111),
-	                        array("perfil_id" => 2222),
-	                        array("perfil_id" => 3333)
-	                    )
-	                )
-	            )
-		    )
-		);*/
 
-		//return $result;
+		$array_data = (array) $data;
+
+		$asignacion = self::$EntityManager->find("Entity\Asignacion",$array_data['id']);
+
+		if(!$asignacion) throw new ErrorException("No se encuentra la asignacion", 1);
+
+		$asignacion->setEstatus($array_data["estatus"]);
+		self::$EntityManager->persist($asignacion);
+
+		return $asignacion;
+
 	}
 
 	// POST route
@@ -294,7 +280,9 @@ class AsignacionesManager extends BaseManager
 
     public  function iniciarJuego($data)
 	{
-		/*$result = array(
+
+		/*
+		$result = array(
 		    "success"  => true, 
 		    "response" => array(
 	            array(
@@ -337,7 +325,8 @@ class AsignacionesManager extends BaseManager
 
     public  function terminarJuego($data)
 	{
-		/*$result = array(
+		/*
+		$result = array(
 		    "success"  => true, 
 		    "response" => array(
 	            "id" => 1,
@@ -362,9 +351,9 @@ class AsignacionesManager extends BaseManager
 	                )
 	            )
 		    )
-		);
+		);*/
 
-		return $result;*/
+		return $result;
 	}
 
 	public function sorteo($data){
