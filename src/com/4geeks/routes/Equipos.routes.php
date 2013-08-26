@@ -132,6 +132,8 @@
 		}
 	});
 
+
+
 	function equiposParser($equipos){
 		$result = array();
 		foreach ($equipos as $key => $equipo) {
