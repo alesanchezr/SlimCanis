@@ -404,20 +404,21 @@ class Reservacion
             );
     }
 
+    //TODO: Todavia falta devolver las reservaciones con la asignacion
     public function toArrayParaAsignacion()
     {
         $equipo = $this->getEquipo();
         if($equipo) $equipo = $equipo->toArray();
 
-        $asignacion = $this->getAsignacion();
-        if($asignacion) $asignacion = $asignacion->toArrayMin();
+        if(isset($this->asignacion))
+            $asignacion = $this->getAsignacion()->toArrayMin();
 
         return array(
             "id" => $this->id, 
             "fecha" => $this->fecha_solicitada, 
             "estatus" => $this->estatus,
-            "equipo" => $equipo,
-            "asignacion" => $asignacion
+            "equipo" => $equipo
+            //"asignacion" => $asignacion
             );
     }
 }
