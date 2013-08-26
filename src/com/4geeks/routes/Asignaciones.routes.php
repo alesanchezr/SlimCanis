@@ -32,6 +32,38 @@
 
 	});
 
+		
+	// POST route
+	/**
+	*	Entrada:
+	*
+	*	{
+	*	    "id": 1,
+	*	    "cadi_id": 1
+	*	}
+	*
+	**/
+
+	$app->post('/asignaciones/iniciar_juego', $authenticate($app), function() use ($app){
+
+		try
+		{
+			$data = json_decode($app->request()->getBody());
+
+			$asignacionesManager = new AsignacionesManager();
+			$asignacion = $asignacionesManager->iniciarJuego($data);
+
+			AsignacionesManager::$EntityManager->flush();
+		    $app->render(200,Utils::renderResult($asignacion->toArray()));
+		}
+		catch (ErrorException $e)
+		{
+			$app->render(200,Utils::renderFault($e->getMessage()));
+		}
+
+
+	});
+
 	// POST route
 	/**
 	*	Entrada:
@@ -126,29 +158,6 @@
 
 		$asignacionesManager = new AsignacionesManager();
 		$result = $asignacionesManager->asignarHora($data);
-
-	    $app->render(200,$result);
-
-	});
-		
-	// POST route
-	/**
-	*	Entrada:
-	*
-	*	{
-	*	    "fecha_inicio": "1961-01-02 06:30:32",
-	*	    "cadi": "Raúl Pérez",
-	*	    "editado_por": "amilano"
-	*	}
-	*
-	**/
-
-	$app->post('/asignaciones/:id/iniciar_juego', $authenticate($app), function($id) use ($app){
-
-		$data = json_decode($app->request()->getBody());
-
-		$asignacionesManager = new AsignacionesManager();
-		$result = $asignacionesManager->iniciarJuego($data);
 
 	    $app->render(200,$result);
 

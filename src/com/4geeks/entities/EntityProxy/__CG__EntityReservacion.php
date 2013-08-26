@@ -189,7 +189,6 @@ class Reservacion extends \Entity\Reservacion implements \Doctrine\ORM\Proxy\Pro
         return parent::getEquipo();
     }
 
-<<<<<<< HEAD
     public function toArrayMin()
     {
         $this->__load();
@@ -202,8 +201,6 @@ class Reservacion extends \Entity\Reservacion implements \Doctrine\ORM\Proxy\Pro
         return parent::toArrayParaAsignacion();
     }
 
-=======
->>>>>>> 057ce9b36b279c8ce7d90f557eda41692f315b5f
 
     public function __sleep()
     {
