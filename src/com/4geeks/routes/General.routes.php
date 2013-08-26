@@ -111,7 +111,7 @@
 
 	// GET route
 	$app->get('/reservaciones_semana_actual/:numero_socio', $authenticate($app), function($numero_socio) use ($app){
-
+		//TODO: todavia falta devolver las reservaciones con la asignaicon incluida
 		try
 		{
 			$data = json_decode($app->request()->getBody());
@@ -120,7 +120,8 @@
 
 			$rsvp_array = array();
 			foreach ($reservaciones as $rsvp) {
-				array_push($rsvp_array, $rsvp->toArrayParaAsignacion());
+				//die(print_r($rsvp->toArrayMin()));
+				if($rsvp) array_push($rsvp_array, $rsvp->toArrayMin());
 			}
 
 		    $app->render(200,Utils::renderResult(array($rsvp_array)));

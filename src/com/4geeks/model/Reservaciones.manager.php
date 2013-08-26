@@ -75,8 +75,8 @@ class ReservacionesManager extends BaseManager
 
     public  function getReservacionesSemana($numero_socio)
 	{
-		$start = date("YYYY-mm-dd h:i:s", strtotime( "previous monday" ));
-		$end = date("YYYY-mm-dd h:i:s", strtotime( "next friday" ));
+		$start = date("Y-m-d h:i:s", strtotime( "previous monday" ));
+		$end = date("Y-m-d h:i:s", strtotime( "next friday" ));
 
 		//$qb = self::$EntityManager->createQuery('SELECT r FROM Reservacion JOIN r.equipo e JOIN e.integrantes i WHERE i.')
 		$qb = self::$EntityManager->createQueryBuilder() 
