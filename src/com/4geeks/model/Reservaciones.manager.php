@@ -93,6 +93,16 @@ class ReservacionesManager extends BaseManager
 		return $array;
 	}
 
+    public function eliminar($id)
+	{
+		$reservacion = self::$EntityManager->find("Entity\Reservacion",$id);
+
+		if($reservacion)
+			self::$EntityManager->remove($reservacion);
+
+		return true;
+	}
+
 	/*
 
 	Este es un metodo de prueba para que vean como trabajar con Doctrine
