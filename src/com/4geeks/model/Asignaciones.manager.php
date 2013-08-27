@@ -241,6 +241,23 @@ class AsignacionesManager extends BaseManager
 		return $result;
 	}
 
+
+
+    public  function listarAsignacionesPorFecha($fecha)
+	{
+
+		$qb = self::$EntityManager->createQueryBuilder() 
+		   ->select('a')
+		   ->from('Entity\Asignacion', 'a')
+		   ->where('a.fecha_solicitada == :fecha')
+		   ->setParameter("fecha",$fecha);
+
+		$array = $qb->getQuery()->getResult(1);
+
+		return $array;
+	}
+
+
 	// POST route
 	/**
 	*	Entrada:
@@ -312,7 +329,7 @@ class AsignacionesManager extends BaseManager
     public  function terminarJuego($data)
 	{
 		$array_data = (array) $data;
-		
+
 		$asignacion = self::$EntityManager->find("Entity\Asignacion",$array_data['id']);
 
 		if(!$asignacion) throw new ErrorException("La asignacion es invalida.", 1);
