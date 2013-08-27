@@ -105,12 +105,20 @@
 
 	$app->post('/asignaciones/:fecha', $authenticate($app), function($fecha) use ($app){
 
-		$data = json_decode($app->request()->getBody());
+		try
+		{
+			$data = json_decode($app->request()->getBody());
 
-		$asignacionesManager = new AsignacionesManager();
-		$result = $asignacionesManager->listarAsignaciones($data);
+			$asignacionesManager = new AsignacionesManager();
+			$result = $asignacionesManager->listarAsignacionesPorFecha($fecha,$data);
 
-	    $app->render(200,$result);
+		    $app->render(200,$result);
+
+		}
+		catch (ErrorException $e)
+		{
+			$app->render(200,Utils::renderFault($e->getMessage()));
+		}
 
 	});
 

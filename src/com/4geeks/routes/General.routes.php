@@ -124,7 +124,7 @@
 				if($rsvp) array_push($rsvp_array, $rsvp->toArrayMin());
 			}
 
-		    $app->render(200,Utils::renderResult(array($rsvp_array)));
+		    $app->render(200,Utils::renderResult($rsvp_array));
 		}
 		catch (ErrorException $e)
 		{
