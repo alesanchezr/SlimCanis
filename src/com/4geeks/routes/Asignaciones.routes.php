@@ -103,16 +103,21 @@
 	*
 	**/
 
-	$app->post('/asignaciones/:fecha', $authenticate($app), function($fecha) use ($app){
+	$app->get('/asignaciones/fecha/:fecha', $authenticate($app), function($fecha) use ($app){
 
 		try
 		{
 			$data = json_decode($app->request()->getBody());
 
 			$asignacionesManager = new AsignacionesManager();
-			$result = $asignacionesManager->listarAsignacionesPorFecha($fecha,$data);
+			$result = $asignacionesManager->listarAsignacionesPorFecha($fecha);
 
-		    $app->render(200,$result);
+			$arrayAsignaciones = array();
+			foreach ($result as $asignacion) {
+				array_push($arrayAsignaciones, $asignacion->toArrayMin());
+			}
+
+		    $app->render(200,Utils::renderResult($arrayAsignaciones));
 
 		}
 		catch (ErrorException $e)

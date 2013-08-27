@@ -119,30 +119,58 @@ class AsignacionesManager extends BaseManager
 	*	VACIO
 	*
 	**/
-    public  function generarAsignaciones($data)
+    public  function sortear($data)
 	{
-		$asignaciones = self::sorteo($data);
-		
-		//print_r($asignaciones);
-
-		//die("Voy a asignar");
-
-		$result = array();
-		foreach ($asignaciones as $key => $asignacion) {
-			$newAsignacion = new Asignacion();
-			$newAsignacion->setReservacion($asignacion["reservacion"]);
-			$newAsignacion->setEquipo($asignacion["reservacion"]->getEquipo());
-			$newAsignacion->setSocio($asignacion["reservacion"]->getEquipo()->getSocio());
-			$newAsignacion->setFechaAsignada($asignacion["horario"]);
-			$newAsignacion->setHoyo($asignacion["hoyo"]);
-			$newAsignacion->setEstatus("pendiente");
-
-			self::$EntityManager->persist($newAsignacion);
-			array_push($result, $newAsignacion);
-
-			//echo "\n Agregado: ".$asignacion["horario"];
-		}
-
+		/*
+		$result = array(
+		    "success"  => true, 
+		    "response" => array(
+		        array(
+		            "id" => 8, 
+		            "fecha" => "1969-01-02 06:30:00", 
+		            "estatus" => "pendiente", 
+		            "equipo" => array(
+		                "id" => 1,
+		                "perfil_id" => 1, 
+		                "handicap_promedio" => 12,
+		                "integrantes" => array(
+		                    array(
+		                        "id" => 1,
+		                        "nombre" => "Antonio Pérez",
+		                        "usuario" => array(
+		                            "username" => 1111,
+		                            "email" => "1111@ccc.com"
+		                        ),
+		                        "numero_socio" => 1111,
+		                        "handicap" => 12,
+		                        "socio" => "NULL"
+		                    ),
+		                    array(
+		                        "id" => 2,
+		                        "nombre" => "Antonio Pérez",
+		                        "usuario" => array(
+		                            "username" => 2222,
+		                            "email" => "2222@ccc.com"
+		                        ),
+		                        "numero_socio"=>2222,
+		                        "handicap"=>10,
+		                        "socio"=>"NULL"
+		                    ),
+		                    array(
+		                        "id" => 3,
+		                        "nombre" => "Antonio Pérez",
+		                        "usuario" => array(),
+		                        "numero_socio" => "NULL",
+		                        "handicap" => 25,
+		                        "socio" => 1111
+		                    )
+		                )
+		            ),
+		            "asignacion" => array()
+		        )
+		    )
+		);
+		*/
 		return $result;
 	}
 	// POST route
@@ -218,12 +246,15 @@ class AsignacionesManager extends BaseManager
     public  function listarAsignacionesPorFecha($fecha)
 	{
 
-		$qb = self::$EntityManager->createQueryBuilder() 
-		   ->select('a')
-		   ->from('Entity\Asignacion', 'a')
-		   ->where('a.fecha_solicitada == :fecha')
-		   ->setParameter("fecha",$fecha);
+		$start = date("Y-m-d", strtotime( $fecha . " - 1 day" ));
+		$end = date("Y-m-d", strtotime( $fecha . " + 1 day" ));
 
+		$qb = self::$EntityManager->createQueryBuilder() 
+		   ->select('r')
+		   ->from('Entity\Reservacion', 'r')
+		   ->where("r.fecha_solicitada between :fecha1 and :fecha2")
+		   ->setParameter("fecha1",$start)
+		   ->setParameter("fecha2",$end);
 		$array = $qb->getQuery()->getResult(1);
 
 		return $array;
@@ -314,10 +345,6 @@ class AsignacionesManager extends BaseManager
 	}
 
 	public function sorteo($data){
-
-		$result = array();
-		$seleccionados = array(0=>0);
-
 		/*
 			Base times:
 			00:00 am 	(Received)
@@ -359,84 +386,34 @@ class AsignacionesManager extends BaseManager
 			if ($baseEnd<0) {
 				$baseEnd = 0;
 			}
-
-			$temp = $baseInit;
-			for ($i=0; $i < ( ($lessInit) / 600); $i++) {
-
-				$baseEndHoyos = $baseInit+7800; //8:40
-				$hoyos = 1;
-				if ($temp <= $baseEndHoyos) {
-					//echo "\n".date('Y-m-d\Th:i:s', $temp)." menor a 8:40 \n";
-					$hoyos = 2;
-				}
-
-				for ($j=0; $j < $hoyos; $j++) { 
-					$ss = self::getSorteoParaHora($temp, $seleccionados);
-					//if ($ss >0) {
-					if ($ss != null) {
-						array_push($result, self::wrapAsignacionFromSorteo($j,date("Y-m-d\Th:i:s",$temp),$ss));//array("hoyo ".$j." ".date("Y-m-d\Th:i:s",$temp) => $ss));
-						//array_push($seleccionados, $ss);
-					}
-					
-					//echo "\n";
-				}	
-					$temp = $temp+600;
-			}
-
-			$temp = $baseEnd-$lessEnd;
-			for ($i=0; $i < ( $lessEnd / 600); $i++) {
-				//array_push($result, array("".date("Y-m-d\Th:i:s",$temp) => self::getSorteoParaHora($temp)));
-				//echo "\n";
-				$ss = self::getSorteoParaHora($temp, $seleccionados);
-				//if ($ss >0) {
-				if ($ss != null) {
-					array_push($result, self::wrapAsignacionFromSorteo(1,date("Y-m-d\Th:i:s",$temp),$ss));//array("hoyo 0 ".date("Y-m-d\Th:i:s",$temp) => $ss));
-					//array_push($seleccionados, $ss);
-				}
-				$temp = $temp+600;
-			}
-		}else{
-			$temp = $baseInit;
-			for ($i=0; $i <= ( ($baseEnd-$baseInit) / 600); $i++) {
-				$baseEndHoyos = $baseInit+7800; //8:40
-				$hoyos = 1;
-				if ($temp <= $baseEndHoyos) {
-					//echo "\n".date('Y-m-d\Th:i:s', $temp)." menor a 8:40 \n";
-					$hoyos = 2;
-				}
-
-				for ($j=0; $j < $hoyos; $j++) { 
-					$ss = self::getSorteoParaHora($temp, $seleccionados);
-					//if ($ss >0) {
-					if ($ss != null) {
-						array_push($result, self::wrapAsignacionFromSorteo($j,date("Y-m-d\Th:i:s",$temp),$ss));//array("hoyo ".$j." ".date("Y-m-d\Th:i:s",$temp) => $ss));
-						//array_push($seleccionados, $ss);
-					}
-				}
-				$temp = $temp+600;
-			}	
 		}
 
-		//print_r($result);
+		$temp = $baseInit;
+		for ($i=0; $i < ( ($lessInit) / 600); $i++) {
+			self::getSorteoParaHora($temp);
+			$temp = $temp+600;
+		}
 
-		return $result;
+		$temp = $baseEnd-$lessEnd;
+		for ($i=0; $i < ( ($lessEnd+600) / 600); $i++) {
+			self::getSorteoParaHora($temp);
+			$temp = $temp+600;
+		}
+
+		//print_r($array);
+
+		//return $array;
 	}
 
-	public function getSorteoParaHora($hora,$seleccionados){
-		//echo "\n Seleccionados tiene :\n";
-		//print_r($seleccionados);
-		//echo "\n";
-
+	public function getSorteoParaHora($hora){
 		$handicap = array();
 		array_push($handicap, array(0 => 0,1 => 8));
 		array_push($handicap, array(0 => 9,1 => 12));
 		array_push($handicap, array(0 => 13,1 => 18));
 		array_push($handicap, array(0 => 19,1 => 25));
-		$notFound = true;
-			
-		for ($i=0; $i < 4; $i++) { //4 Conjuntos de handicap (0-8,9-12,13-18,19-)
 
-			$qb = self::$EntityManager->createQuery("SELECT COUNT(t) FROM Entity\Ticket t LEFT JOIN t.reservacion r LEFT JOIN r.equipo e WHERE r.fecha_solicitada = ?1 AND r.estatus = 'pendiente' AND e.handicap_promedio between ?2 AND ?3");
+		for ($i=0; $i < 4; $i++) { //4 Conjuntos de handicap (0-8,9-12,13-18,19-)
+			$qb = self::$EntityManager->createQuery('SELECT COUNT(t) FROM Entity\Ticket t LEFT JOIN t.reservacion r LEFT JOIN r.equipo e WHERE r.fecha_solicitada = ?1 AND e.handicap_promedio between ?2 AND ?3');
 			$qb->setParameter(1, date('Y-m-d\Th:i:s', $hora));
 			$qb->setParameter(2,$handicap[$i][0]);
 			$qb->setParameter(3,$handicap[$i][1]);
@@ -449,9 +426,9 @@ class AsignacionesManager extends BaseManager
 				//echo "\n";
 				//echo "Random: ".rand(1,$array[0][1]);
 				$offset = rand(1,$array[0][1])-1;
-				//echo "\n";
+				echo "\n";
 
-				$qb = self::$EntityManager->createQuery("SELECT t FROM Entity\Ticket t LEFT JOIN t.reservacion r LEFT JOIN r.equipo e WHERE r.fecha_solicitada = ?1 AND r.estatus = 'pendiente' AND e.handicap_promedio between ?2 AND ?3");
+				$qb = self::$EntityManager->createQuery('SELECT t FROM Entity\Ticket t LEFT JOIN t.reservacion r LEFT JOIN r.equipo e WHERE r.fecha_solicitada = ?1 AND e.handicap_promedio between ?2 AND ?3');
 				$qb->setParameter(1, date('Y-m-d\Th:i:s', $hora));
 				$qb->setParameter(2,$handicap[$i][0]);
 				$qb->setParameter(3,$handicap[$i][1]);
@@ -461,48 +438,14 @@ class AsignacionesManager extends BaseManager
 				$array2 = $qb->getResult();
 
 				foreach ($array2 as $key => $ticketSelected) {
-					//echo "Equipo seleccionado para el salir (".date("Y-m-d\Th:i:s",$hora)." - handicap ".$handicap[$i][0]."-".$handicap[$i][1]."): ".$ticketSelected->getReservacion()->getEquipo()->getId();	
+					echo "Equipo seleccionado para el salir (".date("Y-m-d\Th:i:s",$hora)."): ".$ticketSelected->getReservacion()->getEquipo()->getId();	
 				}
-				$notFound =false;
-
-				self::eraseTickets($ticketSelected->getReservacion()->getId());
-
-				return $ticketSelected->getReservacion();//$ticketSelected->getReservacion()->getEquipo()->getId();
-
-				break;
-			}/*else{
+			}else{
 				echo "\n";
-				echo "Equipo seleccionado para el salir (".date("Y-m-d\Th:i:s",$hora)." - handicap ".$handicap[$i][0]."-".$handicap[$i][1].")): N/A";
+				echo "Equipo seleccionado para el salir (".date("Y-m-d\Th:i:s",$hora)."): N/A";
 
-			}*/
-		}
-		if ($notFound) return null;
-		
-	}
-
-	public function eraseTickets($reservacionId)
-	{	
-		$qb = self::$EntityManager->createQuery('SELECT t FROM Entity\Ticket t WHERE t.reservacion = ?1');
-		$qb->setParameter(1, $reservacionId);
-
-		$array2 = $qb->getResult();
-		//echo "\n Array de Tickets\n";
-		//print_r($array2);
-
-		foreach ($array2 as $key => $ticket) {
-			self::$EntityManager->remove($ticket);
-			self::$EntityManager->flush();
-			echo "Borrado: ".$ticket->getId();
-		}
-	}
-
-	public function wrapAsignacionFromSorteo($hoyo, $hora, $equipo){
-		if ($equipo != null) {
-			return array('horario' => $hora, 'hoyo' => $hoyo, 'reservacion' => $equipo);
-		}else{
-			return null;
-		}
-		
+			}
+		}	
 	}
 }
 
