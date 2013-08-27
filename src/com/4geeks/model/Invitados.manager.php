@@ -32,7 +32,7 @@ class InvitadosManager extends BaseManager
 	{
 		$qb = self::$EntityManager->createQueryBuilder();
 		$qb->select('s')
-		   ->from('Entity\Invitados', 's');
+		   ->from('Entity\Invitado', 's');
 		$array = $qb->getQuery()->getResult(2);
 		return $array;
 	}

@@ -204,15 +204,73 @@
 	
 
 	$app->get('/asignaciones/sortear/:fecha', function($fecha) use ($app){
-		//try{
-			$equiposManager = new AsignacionesManager();
-			$equipos = $equiposManager->sorteo($fecha);
+		
+		try{
+			$manager = new AsignacionesManager();
+			//$equipos = $equiposManager->sorteo($fecha);
+			$asignaciones = $manager->generarAsignaciones($fecha);
 
-			//print_r($equipos);
+			$result = array();
+
+			foreach ($asignaciones as $key => $asignacion) {
+
+				$asig = array(
+							"id" => $asignacion->getId(),
+				            "fecha_asignada" => $asignacion->getFechaAsignada(),
+				            "fecha_inicio" => $asignacion->getFechaInicio(),
+				            "fecha_fin" => $asignacion->getFechaFin(),
+				            "estatus" => $asignacion->getEstatus(),
+				            "hoyo" => $asignacion->getHoyo(),
+				            "reservacion" => array(
+				                "id" => $asignacion->getReservacion()->getId(), 
+				                "fecha" => $asignacion->getReservacion()->getFechaSolicitada(), 
+				                "estatus" => $asignacion->getReservacion()->getEstatus(),
+				                "equipo" => array(
+				                    "id" => $asignacion->getReservacion()->getEquipo()->getId(),
+				                    "socio" => array(
+				                        "id" => $asignacion->getReservacion()->getEquipo()->getSocio()->getId(),
+				                        "nombre" => $asignacion->getReservacion()->getEquipo()->getSocio()->getNombre(),
+				                        "numero_socio" => $asignacion->getReservacion()->getEquipo()->getSocio()->getNumeroSocio(),
+				                        "handicap" => $asignacion->getReservacion()->getEquipo()->getSocio()->getHandicap()
+				                    ), 
+				                    "handicap_promedio" => $asignacion->getReservacion()->getEquipo()->getHandicapPromedio(),
+				                    "integrantes" => array()
+				                )
+				            )
+						);
+				foreach ($asignacion->getReservacion()->getEquipo()->getIntegrantes() as $key => $integrante) {
+
+					$integ = array();
+					if ($integrante->getSocio() != null) {
+						$integ = array(
+								"id"=> $integrante->getSocio()->getId(),
+								"nombre"=> $integrante->getSocio()->getNombre(),
+								"numero_socio"=> $integrante->getSocio()->getNumeroSocio(),
+								"handicap"=> $integrante->getSocio()->getHandicap(),
+								"tipo"=> "socio"
+							);
+					}else{
+						$integ = array(
+								"id"=> $integrante->getInvitado()->getId(),
+								"nombre"=> $integrante->getInvitado()->getNombre(),
+								"cedula"=> $integrante->getInvitado()->getCedula(),
+								"handicap"=> $integrante->getInvitado()->getHandicap(),
+								"tipo"=> "invitado"
+							);
+					}
+					//array_push($eq["integrantes"], $integ);
+					array_push($asig["reservacion"]["equipo"]["integrantes"], $integ);
+				}
+				array_push($result, $asig);
+			}
+
+			//print_r($result);
 			//$app->render(200,Utils::renderResult(equiposParser($equipos)));
-		//}catch(ErrorException $e){
-			//$app->render(200,Utils::renderFault($e->getMessage()));
-		//}
+			AsignacionesManager::$EntityManager->flush();
+			$app->render(200,Utils::renderResult($result));
+		}catch(ErrorException $e){
+			$app->render(200,Utils::renderFault($e->getMessage()));
+		}
 	});
 
 ?>
