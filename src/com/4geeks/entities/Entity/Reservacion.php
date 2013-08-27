@@ -398,7 +398,7 @@ class Reservacion
 
         return array(
             "id" => $this->id, 
-            "fecha" => $this->date('Y-m-d\Th:i:s', strtotime($fecha_solicitada)), 
+            "fecha" => $this->"".date('Y-m-d\Th:i:s', strtotime($fecha_solicitada)), 
             "estatus" => $this->estatus,
             "equipo" => $equipo
             );
