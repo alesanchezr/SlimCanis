@@ -87,8 +87,8 @@
 		date_default_timezone_set('America/Caracas');
 		$result = array();
 
-		//array_push($result, array("fecha_dia" => date('Y-m-d\Th:i:s', time())));
-		array_push($result, array("fecha_dia" => "2013-08-21T14:30:55"));
+		array_push($result, array("fecha_dia" => date('Y-m-d\Th:i:s', time())));
+		//array_push($result, array("fecha_dia" => "2013-08-21T14:30:55"));
 		$app->render(200,Utils::renderResult($result));
 
 	});
