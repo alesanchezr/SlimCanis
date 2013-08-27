@@ -271,7 +271,7 @@
 
 			//print_r($result);
 			//$app->render(200,Utils::renderResult(equiposParser($equipos)));
-			AsignacionesManager::$EntityManager->flush();
+			//AsignacionesManager::$EntityManager->flush();
 			$app->render(200,Utils::renderResult($result));
 		}catch(ErrorException $e){
 			$app->render(200,Utils::renderFault($e->getMessage()));
