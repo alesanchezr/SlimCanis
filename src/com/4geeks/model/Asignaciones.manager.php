@@ -463,6 +463,47 @@ class AsignacionesManager extends BaseManager
 		
 	}
 
+	public function getSorteoParaHoraSimple($hora,$seleccionados){
+
+		$notFound = true;
+		
+		$qb = self::$EntityManager->createQuery("SELECT COUNT(r) FROM Entity\Reservacion r LEFT JOIN r.equipo e WHERE r.fecha_solicitada = ?1 AND r.estatus = 'pendiente' ");
+		$qb->setParameter(1, date('Y-m-d\Th:i:s', $hora));
+		$array = $qb->getResult(2);
+
+		if ($array[0][1]>0) {
+			//echo "\n";
+			//echo "\n";
+			//echo "COUNT: ".$array[0][1];
+			//echo "\n";
+			//echo "Random: ".rand(1,$array[0][1]);
+			$offset = rand(1,$array[0][1])-1;
+			//echo "\n";
+
+			$qb = self::$EntityManager->createQuery("SELECT r FROM Entity\Reservacion r LEFT JOIN r.equipo e WHERE r.fecha_solicitada = ?1 AND r.estatus = 'pendiente' ");
+			$qb->setParameter(1, date('Y-m-d\Th:i:s', $hora));
+			$qb->setMaxResults(1);
+			$qb->setFirstResult($offset);
+
+			$array2 = $qb->getResult();
+
+			$notFound =false;
+
+			//self::eraseTickets($ticketSelected->getReservacion()->getId());
+
+			return $ticketSelected->getReservacion();//$ticketSelected->getReservacion()->getEquipo()->getId();
+
+			break;
+		}/*else{
+			echo "\n";
+			echo "Equipo seleccionado para el salir (".date("Y-m-d\Th:i:s",$hora)." - handicap ".$handicap[$i][0]."-".$handicap[$i][1].")): N/A";
+
+		}*/
+	
+		if ($notFound) return null;
+		
+	}
+
 	public function eraseTickets($reservacionId)
 	{	
 		$qb = self::$EntityManager->createQuery('SELECT t FROM Entity\Ticket t WHERE t.reservacion = ?1');
